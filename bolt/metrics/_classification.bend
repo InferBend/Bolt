@@ -1,5 +1,3 @@
-# import List functions here
-
 def accuracy_score/aux(yTrue, yPred):
   match yTrue:
     case List/Cons:
@@ -16,4 +14,5 @@ def accuracy_score/aux(yTrue, yPred):
 
 
 def accuracy_score(yTrue, yPred):
-  return accuracy_score/aux(yTrue, yPred) / List/length(yTrue)
+  (l, yTrue) = List/length(yTrue)
+  return accuracy_score/aux(yTrue, yPred) / to_f24(l)

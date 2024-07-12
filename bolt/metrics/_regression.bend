@@ -1,5 +1,3 @@
-# import List functions here
-
 # decide about the helper functions
 
 def abs(x):
@@ -16,7 +14,7 @@ def sum(x):
     case List/Nil:
       return 0.0
 
-#
+####
 
 
 def meanSquaredError/aux(yTrue, yPred):
@@ -32,7 +30,8 @@ def meanSquaredError/aux(yTrue, yPred):
 
 
 def meanSquaredError(yTrue, yPred):
-  return meanSquaredError/aux(yTrue, yPred) / List/length(yTrue)
+  (l, yTrue) = List/length(yTrue)
+  return meanSquaredError/aux(yTrue, yPred) / to_f24(l)
 
 
 def meanAbsoluteError/aux(yTrue, yPred):
@@ -48,7 +47,8 @@ def meanAbsoluteError/aux(yTrue, yPred):
 
 
 def meanAbsoluteError(yTrue, yPred):
-  return meanAbsoluteError/aux(yTrue, yPred) / List/length(yTrue)
+  (l, yTrue) = List/length(yTrue)
+  return meanAbsoluteError/aux(yTrue, yPred) / to_f24(l)
 
 
 def totalSumOfSquares/aux(yTrue, yMean):
@@ -60,7 +60,8 @@ def totalSumOfSquares/aux(yTrue, yMean):
 
 
 def totalSumOfSquares(yTrue):
-  yMean = sum(yTrue) / List/length(yTrue)
+  (l, yTrue) = List/length(yTrue)
+  yMean = sum(yTrue) / to_f24(l)
   return totalSumOfSquares/aux(yTrue, yMean)
 
 
