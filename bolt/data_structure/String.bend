@@ -1,0 +1,59 @@
+##############################
+# Author: Nihal Srivastava, May 2024
+##############################
+# String Data Structure - Imp Syntax #
+
+from ./List import List/append
+
+
+def String/concat(x, y):
+  match x:
+    case String/Cons:
+      return String/Cons{head: x.head, tail: String/concat(x.tail, y)}
+    case String/Nil:
+      return y
+
+
+def String/append(x, val):
+  return String/concat(x, String/Cons{head: val, tail: String/Nil})
+
+
+def String/index(s, idx):
+  match s:
+    case String/Cons:
+      if idx == 0:
+        return s.head
+      else:
+        return String/index(s.tail, idx + (-1))
+    case String/Nil:
+      return "Out of bound"
+
+
+def String/splitAtLetter/aux(s1, s2, value):
+  match s2:
+    case String/Cons:
+      if s2.head == value:
+        return (s1, s2.tail)
+      else:
+        return String/splitAtLetter/aux(String/append(s1, s2.head), s2.tail, value)
+    case String/Nil:
+      return (s1, s2)
+
+
+def String/splitAtLetter(s, value):
+  return String/splitAtLetter/aux("", s, value)
+
+
+def String/splitToList(s, delimiter, l):
+  match s:
+    case String/Cons:
+      (s1, s2) = String/splitAtLetter(s, delimiter)
+      l = List/append(l, s1)
+      return String/splitToList(s2, delimiter, l)
+    case String/Nil:
+      return l
+
+
+def main():
+  l = String/splitToList("Hello,world,test", ',', [])
+  return l

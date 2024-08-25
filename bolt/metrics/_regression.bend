@@ -1,20 +1,4 @@
-# decide about the helper functions
-
-def abs(x):
-  if x < 0.0:
-    return -1.0 * x
-  else:
-    return x
-
-
-def sum(x):
-  match x:
-    case List/Cons:
-      return x.head + sum(x.tail)
-    case List/Nil:
-      return 0.0
-
-####
+from ../utils/_math import (abs, sum)
 
 
 def meanSquaredError/aux(yTrue, yPred):
@@ -70,3 +54,10 @@ def r2_score(yTrue, yPred):
   tss = totalSumOfSquares(yTrue)
   r2 = 1.0 - (rss / tss)
   return r2
+
+
+def main():
+  y1 = [1.0, 2.0, 1.0, 1.1]
+  y2 = [1.0, 1.5, 0.8, 1.1]
+
+  return meanSquaredError(y1, y2)
