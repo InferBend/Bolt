@@ -2,7 +2,7 @@
 # Author: Nihal Srivastava, May 2024
 ##############################
 
-from ../data_structure/List import *
+from ../types/List import *
 from ../utils/_math import (min, max, sum)
 from ../utils/_helper import sort
 from ../utils/_stats import (distance, mode)
