@@ -74,14 +74,18 @@ def List/split(x, i):
   return List/split/aux([], x, i)
 
 
-def main():
-  # x = [[1, 2, 3], [4, 5, 6]]
-  # return List/index(List/index(x, 0), 1)
-  x = [1, 2, 3]
-  y = [4, 5, 6]
-  z = List/concat(x, y)
-  z = List/appendFront(z, 10)
-  (val, z) = List/popFront(z)
-  z = List/popBack(z)
-  (l1, l2) = List/split(z, 2)
-  return l2
+def List/popElement/aux(x, index, before):
+  match x:
+    case List/Cons:
+      if index < 1.0:
+        return (x.head, x.tail)
+      else:
+        before = List/append(before, x.head)
+        (ele, remaining) = List/popElement(x.tail, index - 1.0)
+        return (ele, List/concat(before, remaining))
+    case List/Nil:
+      return (0.0, List/Nil)
+
+
+def List/popElement(x, index):
+  return List/popElement/aux(x, index, [])
