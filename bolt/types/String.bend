@@ -54,6 +54,38 @@ def String/splitToList(s, delimiter, l):
       return l
 
 
+def string_length(s):
+  match s:
+    case String/Cons:
+      return 1 + string_length(s.tail)
+    case String/Nil:
+      return 0
+
+
+def string_equal(s1, s2):
+  l1 = string_length(s1)
+  l2 = string_length(s2)
+  if l1 != l2:
+    return 0
+  else:
+    match s1:
+      case String/Cons:
+        match s2:
+          case String/Cons:
+            if s1.head == s2.head:
+              return string_equal(s1.tail, s2.tail)
+            else:
+              return 0
+          case String/Nil:
+            return 0
+      case String/Nil:
+        match s2:
+          case String/Nil:
+            return 1
+          case _:
+            return 0
+
+
 def main():
   l = String/splitToList("Hello,world,test", ',', [])
   return l
