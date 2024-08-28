@@ -1,5 +1,6 @@
 from ./_math import sum
-from ../types/List import List/index
+from ../types/List import (List/index, List/contains)
+from ../types/Set import (Set/add)
 
 
 def distance/aux(x, y, i):

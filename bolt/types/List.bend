@@ -89,3 +89,14 @@ def List/popElement/aux(x, index, before):
 
 def List/popElement(x, index):
   return List/popElement/aux(x, index, [])
+
+
+def List/contains(lst, elem):
+  match lst:
+    case List/Cons:
+      if lst.head == elem:
+        return 1
+      else:
+        return List/contains(lst.tail, elem)
+    case List/Nil:
+      return 0
