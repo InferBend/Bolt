@@ -2,8 +2,8 @@
 # Author: Jaisuraj Bantupalli, May 2024
 ##############################
 
-from ../types/String import (string_length, string_equal)
-from ../types/List import List/append
+from ../utils/types/String import (string_length, string_equal)
+from ../utils/types/List import List/append
 
 
 def map_string_lengths(lst):

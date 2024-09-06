@@ -4,10 +4,10 @@
 
 # List imports
 
-from ../types/List import (List/index, List/append, List/popBack, List/popElement)
-from ../utils/_helper import sort
-from ../utils/_math import sum
-from ../utils/_random import *
+from ../utils/types/List import (List/index, List/append)
+from ../utils/helper import sort
+from ../utils/math import (sum, log)
+from ../utils/random import *
 
 
 def List/lengthFloat(x):
@@ -43,9 +43,11 @@ def Set/add(x, val):
       if x.head == val:
         return x
       else:
-        return List/Cons {head: x.head, tail: Set/add(x.tail, val)}
+        # return List/Cons {head: x.head, tail: Set/add(x.tail, val)}
+        return List/concat(x.head, Set/add(x.tail, val))
     case List/Nil:
-      return List/Cons {head: val, tail: List/Nil}
+      # return List/Cons {head: val, tail: List/Nil}
+      return [val]
 
 
 def log2(z):
@@ -204,7 +206,7 @@ def entropy/aux(ps, y):
 
 def entropy(x):
   hist = bincount(x)
-  ps = divideScalar(hist, List/length(x))
+  ps = divideScalar(hist, List/lengthFloat(x))
 
   return (-1.0 * sum(entropy/aux(ps, [])))
 
@@ -248,13 +250,13 @@ def getCount(y, counter, prev):
       return counter
 
 
-def DecisionTree/mostCommonLabel/aux(counter, unique_y, max_count, value):
+def mostCommonLabel/aux(counter, unique_y, max_count, value):
   match unique_y:
     case List/Cons:
       if counter[unique_y.head] > max_count:
-        return DecisionTree/mostCommonLabel/aux(counter, unique_y.tail, counter[unique_y.head], unique_y.head)
+        return mostCommonLabel/aux(counter, unique_y.tail, counter[unique_y.head], unique_y.head)
       else:
-        return DecisionTree/mostCommonLabel/aux(counter, unique_y.tail, max_count, value)
+        return mostCommonLabel/aux(counter, unique_y.tail, max_count, value)
     case List/Nil:
       return value
 
@@ -263,14 +265,13 @@ def DecisionTree/mostCommonLabel(y):
   y = sort(y)
   counter = getCount(y, {}, -1.0)
   unique_y = find_unique(y, [])
-  most_common_label = DecisionTree / \
-      mostCommonLabel/aux(counter, unique_y, 0, -1.0)
+  most_common_label = mostCommonLabel/aux(counter, unique_y, 0, -1.0)
 
   return most_common_label
 
 
 def DecisionTree/growTree(X, y, depth, max_depth, min_samples_split, n_feats):
-  n_samples = List/length(X)
+  n_samples = List/lengthInt(X)
   n_features = 0
   match X:
     case List/Cons:
@@ -278,66 +279,64 @@ def DecisionTree/growTree(X, y, depth, max_depth, min_samples_split, n_feats):
     case List/Nil:
       n_features = 0
 
-  n_labels = List/length(find_unique(y, []))
+  n_labels = List/lengthInt(find_unique(y, []))
 
   if (depth > max_depth | n_labels == 1 | n_samples < min_samples_split):
     # leaf_value = DecisionTree/mostCommonLabel(y)
     leaf_value = mode(y)
-    return DecisionTree/Leaf {value: leaf_value}
+    return DecisionTree/Leaf(leaf_value)
   else:
-    # feat_idxs = choice(n_features, n_feats)
+      # feat_idxs = choice(n_features, n_feats)
     feat_idxs = List/shuffle(List/createRange(0, n_features, []), 43.0)
     feat_idxs = List/getTopK(feat_idxs, n_feats, [])
 
-    (best_feat, best_thresh) = DecisionTree/bestCriteria(X, y, feat_idxs)
+    (best_feat, best_thresh) = bestCriteria(X, y, feat_idxs)
 
-    (left_idxs, right_idxs) = DecisionTree / \
-        split(List/getColumn(X, best_feat), best_thresh)
+    (left_idxs, right_idxs) = split(List/getColumn(X, best_feat), best_thresh)
 
     left = DecisionTree/growTree(List/bulkIndex(X, left_idxs), List/bulkIndex(
         y, left_idxs), depth + 1, max_depth, min_samples_split, n_feats)
     right = DecisionTree/growTree(List/bulkIndex(X, right_idxs), List/bulkIndex(
         y, right_idxs), depth + 1, max_depth, min_samples_split, n_feats)
 
-    return DecisionTree/Node {feature: best_feat, threshold: best_thresh, left: left, right: right}
+    return DecisionTree/Node(best_feat, best_thresh, left, right)
 
 
-def DecisionTree/bestCriteria/aux2(X_column, y, thresholds, best_gain, split_idx, split_thresh, feat_idx):
+def bestCriteria/aux2(X_column, y, thresholds, best_gain, split_idx, split_thresh, feat_idx):
   match thresholds:
     case List/Cons:
-      gain = DecisionTree/informationGain(y, X_column, thresholds.head)
+      gain = informationGain(y, X_column, thresholds.head)
       if (gain > best_gain):
-        return DecisionTree/bestCriteria/aux2(X_column, y, thresholds.tail, gain, feat_idx, thresholds.head, feat_idx)
+        return bestCriteria/aux2(X_column, y, thresholds.tail, gain, feat_idx, thresholds.head, feat_idx)
       else:
-        return DecisionTree/bestCriteria/aux2(X_column, y, thresholds.tail, best_gain, split_idx, split_thresh, feat_idx)
+        return bestCriteria/aux2(X_column, y, thresholds.tail, best_gain, split_idx, split_thresh, feat_idx)
     case List/Nil:
       return (best_gain, split_idx, split_thresh)
 
 
-def DecisionTree/bestCriteria/aux(X, y, feat_idxs, best_gain, split_idx, split_thresh):
+def bestCriteria/aux(X, y, feat_idxs, best_gain, split_idx, split_thresh):
   match feat_idxs:
     case List/Cons:
       X_column = List/getColumn(X, feat_idxs.head)
       thresholds = find_unique(X_column, [])
-      (best_gain, split_idx, split_thresh) = DecisionTree/bestCriteria / \
-          aux2(X_column, y, thresholds, best_gain,
-               split_idx, split_thresh, feat_idxs.head)
-      return DecisionTree/bestCriteria/aux(X, y, feat_idxs.tail, best_gain, split_idx, split_thresh)
+      (best_gain, split_idx, split_thresh) = bestCriteria/aux2(X_column,
+                                                               y, thresholds, best_gain, split_idx, split_thresh, feat_idxs.head)
+      return bestCriteria/aux(X, y, feat_idxs.tail, best_gain, split_idx, split_thresh)
     case List/Nil:
       return (split_idx, split_thresh)
 
 
-def DecisionTree/bestCriteria(X, y, feat_idxs):
+def bestCriteria(X, y, feat_idxs):
   best_gain = -1.0
   split_idx = -1.0
   split_thresh = -1.0
 
-  return DecisionTree/bestCriteria/aux(X, y, feat_idxs, best_gain, split_idx, split_thresh)
+  return bestCriteria/aux(X, y, feat_idxs, best_gain, split_idx, split_thresh)
 
 
-def DecisionTree/informationGain(y, X_column, split_thresh):
+def informationGain(y, X_column, split_thresh):
   parent_entropy = entropy(y)
-  (left_idxs, right_idxs) = DecisionTree/split(X_column, split_thresh)
+  (left_idxs, right_idxs) = split(X_column, split_thresh)
 
   if (List/length(left_idxs) == 0 | List/length(right_idxs) == 0):
     return 0.0
@@ -353,7 +352,7 @@ def DecisionTree/informationGain(y, X_column, split_thresh):
     return ig
 
 
-def DecisionTree/split(X_column, split_thresh):
+def split(X_column, split_thresh):
   left_idx = argwhere(X_column, split_thresh, 0)
   right_idx = argwhere(X_column, split_thresh, 1)
 
@@ -366,8 +365,7 @@ def DecisionTree/traverseTree(x, node):
       if (List/index(node.feature) < node.threshold):
         return DecisionTree/traverseTree(x, node.left)
       else:
-        # return DecisionTree/traverseTree(x, node.right)
-        return 10.0
+        return DecisionTree/traverseTree(x, node.right)
     case DecisionTree/Leaf:
       return node.value
 
@@ -380,3 +378,5 @@ def main():
 
   # x = [2.0, 7.0, 5.4]
   # pred = DecisionTree/traverseTree(x, tree)
+
+  return 1

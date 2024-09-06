@@ -1,6 +1,5 @@
-from ./_math import sum
-from ../types/List import (List/index, List/contains)
-from ../types/Set import (Set/add)
+from ./math import sum
+from ./types/List import (List/index)
 
 
 def distance/aux(x, y, i):
@@ -47,6 +46,6 @@ def mean(x):
 
 
 def main():
-  x = [1.0, 2.0, 3.0]
+  x = [1.0, 2.0, 3.0, 4.0]
 
   return mean(x)

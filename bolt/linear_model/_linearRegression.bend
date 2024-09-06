@@ -2,9 +2,9 @@
 # Author: Nihal Srivastava, June 2024
 ##############################
 
-from ../types/List import List/append
-from ../utils/_vector import *
-from ../utils/_math import (sum, abs)
+from ../utils/types/List import List/append
+from ../utils/vector import *
+from ../utils/math import (sum, abs)
 
 
 def multiplyWeights(x, weights, z):

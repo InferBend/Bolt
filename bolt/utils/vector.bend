@@ -1,4 +1,4 @@
-from ../types/List import List/append
+from ./types/List import List/append
 
 
 def subtract(x, y, z):

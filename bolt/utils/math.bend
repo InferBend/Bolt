@@ -94,4 +94,6 @@ def log(z):
 
 def main():
   x = 7.0
-  return log(x)
+  y = [1.0, 2.0, 3.0]
+  (l, y) = List/length(y)
+  return sum(y) / to_f24(l)

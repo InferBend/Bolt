@@ -2,10 +2,33 @@
 # Author: Nihal Srivastava, Jun 2024
 ##############################
 
-from ../types/List import *
-from ../utils/_math import (min, max, sum)
-from ../utils/_helper import sort
-from ../utils/_stats import (distance, mode, mean)
+from ../utils/types/List import *
+from ../utils/stats import (distance, mode, mean)
+
+
+def sort(xs):
+  match xs:
+    case List/Nil:
+      return List/Nil
+    case List/Cons:
+      return insert(xs.head, sort(xs.tail))
+
+
+def insert(v, xs):
+  match xs:
+    case List/Nil:
+      return List/Cons(v, List/Nil)
+    case List/Cons:
+      return swap_gt(v, xs.head, xs.tail)
+
+
+def swap_gt(v, x, xs):
+  (f1, e1) = v
+  (f2, e2) = x
+  if f2 > f1:
+    return List/Cons(v, List/Cons(x, xs))
+  else:
+    return List/Cons(x, insert(v, xs))
 
 
 def distanceBetweenPoints(points, x):

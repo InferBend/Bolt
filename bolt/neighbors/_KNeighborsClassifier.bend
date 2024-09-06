@@ -2,10 +2,9 @@
 # Author: Nihal Srivastava, May 2024
 ##############################
 
-from ../types/List import *
-from ../utils/_math import (min, max, sum)
-from ../utils/_helper import sort
-from ../utils/_stats import (distance, mode)
+from ../utils/types/List import *
+from ../utils/helper import sort
+from ../utils/stats import (distance, mode)
 
 
 def distanceBetweenPoints(points, x):

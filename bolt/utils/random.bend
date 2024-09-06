@@ -1,5 +1,5 @@
 
-from ../types/List import *
+from ./types/List import *
 
 
 def random/aux(a, c, m, seed):

@@ -1,4 +1,4 @@
-from ../utils/_math import (abs, sum)
+from ../utils/math import (abs, sum)
 
 
 def meanSquaredError/aux(yTrue, yPred):
