@@ -43,10 +43,8 @@ def Set/add(x, val):
       if x.head == val:
         return x
       else:
-        # return List/Cons {head: x.head, tail: Set/add(x.tail, val)}
-        return List/concat(x.head, Set/add(x.tail, val))
+        return List/concat([x.head], Set/add(x.tail, val))
     case List/Nil:
-      # return List/Cons {head: val, tail: List/Nil}
       return [val]
 
 
@@ -296,6 +294,7 @@ def DecisionTree/growTree(X, y, depth, max_depth, min_samples_split, n_feats):
 
     left = DecisionTree/growTree(List/bulkIndex(X, left_idxs), List/bulkIndex(
         y, left_idxs), depth + 1, max_depth, min_samples_split, n_feats)
+
     right = DecisionTree/growTree(List/bulkIndex(X, right_idxs), List/bulkIndex(
         y, right_idxs), depth + 1, max_depth, min_samples_split, n_feats)
 
@@ -338,12 +337,13 @@ def informationGain(y, X_column, split_thresh):
   parent_entropy = entropy(y)
   (left_idxs, right_idxs) = split(X_column, split_thresh)
 
-  if (List/length(left_idxs) == 0 | List/length(right_idxs) == 0):
+  (n_l, left_idx) = List/length(left_idxs)
+  (n_r, right_idx) = List/length(left_idxs)
+
+  if (n_l == 0 | n_r == 0):
     return 0.0
   else:
-    n = List/length(y)
-    n_l = List/length(left_idxs)
-    n_r = List/length(right_idxs)
+    (n, y) = List/length(y)
     e_l = entropy(List/bulkIndex(y, left_idxs))
     e_r = entropy(List/bulkIndex(y, right_idxs))
     child_entropy = (n_l / n) * e_l + (n_r / n) * e_r

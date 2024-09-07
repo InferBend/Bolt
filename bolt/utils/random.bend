@@ -24,14 +24,16 @@ def List/shuffle/aux(x, i, seed):
   if i < 1:
     return x
   else:
-    (randomIndex, seed) = randomInt(1.0, List/length(x) - 1, seed)
+    (l, x) = List/length(x)
+    (randomIndex, seed) = randomInt(1.0, l - 1, seed)
     (e, l) = List/popElement(x, randomIndex)
     l = List/append(l, e)
     return List/shuffle/aux(l, i - 1.0, seed)
 
 
 def List/shuffle(x, seed):
-  (randomIndex, seed) = randomInt(1.0, List/length(x) - 1, seed)
+  (l, x) = List/length(x)
+  (randomIndex, seed) = randomInt(1.0, l - 1, seed)
   return List/shuffle/aux(x, randomIndex, seed)
 
 
