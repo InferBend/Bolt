@@ -4,35 +4,16 @@
 
 # List imports
 
-from ../utils/types/List import (List/index, List/append)
+from ../utils/types/List import (List/index, List/append, List/contains)
 from ../utils/helper import sort
 from ../utils/math import (sum, log)
 from ../utils/random import *
-
-
-def List/lengthFloat(x):
-  match x:
-    case List/Cons:
-      return (List/lengthFloat(x.tail) + 1.0)
-    case List/Nil:
-      return 0.0
 
 
 def List/lengthInt(x):
   match x:
     case List/Cons:
       return (List/lengthInt(x.tail) + 1)
-    case List/Nil:
-      return 0
-
-
-def List/contains(lst, value):
-  match lst:
-    case List/Cons:
-      if lst.head == value:
-        return 1
-      else:
-        return List/contains(lst.tail, value)
     case List/Nil:
       return 0
 
@@ -204,7 +185,8 @@ def entropy/aux(ps, y):
 
 def entropy(x):
   hist = bincount(x)
-  ps = divideScalar(hist, List/lengthFloat(x))
+  (l, x) = List/length(x)
+  ps = divideScalar(hist, l)
 
   return (-1.0 * sum(entropy/aux(ps, [])))
 
