@@ -2,16 +2,12 @@
 # Author: Nihal Srivastava, June 2024
 ##############################
 
-from ./_gradientDescent import *
-
+from ../utils/types/List import List/append
+from ../utils/vector import *
+from ../utils/math import (sum, abs)
 
 type LinearRegression:
   Model {weights, bias, cost}
-
-
-def List/append(x, val):
-  return List/concat(x, [val])
-
 
 def multiplyWeights(x, weights, z):
   match x:
