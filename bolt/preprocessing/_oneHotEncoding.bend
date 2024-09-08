@@ -9,9 +9,9 @@ from ../utils/types/List import List/append
 def map_string_lengths(lst):
   match lst:
     case List/Cons:
-      return List/Cons {head: string_length(lst.head), tail: map_string_lengths(lst.tail)}
+      return List/Cons(string_length(lst.head), map_string_lengths(lst.tail))
     case List/Nil:
-      return List/Ni
+      return List/Nil
 
 
 def List/contains(lst, value):
@@ -31,9 +31,9 @@ def Set/add(x, val):
       if string_equal(x.head, val) == 1:
         return x
       else:
-        return List/Cons {head: x.head, tail: Set/add(x.tail, val)}
+        return List/Cons(x.head,Set/add(x.tail, val))
     case List/Nil:
-      return List/Cons {head: val, tail: List/Nil}
+      return List/Cons(val, List/Nil)
 
 
 def find_unique(ls, s):
@@ -61,7 +61,7 @@ def create_category_index_map(categories, index_map, index):
   match categories:
     case List/Cons:
       ascii_value = asc(categories.head)
-      updated_map = Map/set {map: index_map, key: categories.head, value: index}
+      updated_map = Map/set(index_map,categories.head,index)
       return create_category_index_map(categories.tail, updated_map, index + 1.0)
     case List/Nil:
       return index_map
@@ -72,7 +72,7 @@ def gen_map(ls, l, l1, idx, mp):
     match ls:
       case List/Cons:
         l1 = List/append(l1, asc(ls.head))
-        mp = Map/set{map: mp, key: asc(ls.head), value: idx}
+        mp = Map/set( mp, asc(ls.head), idx)
         return gen_map(ls.tail, l, l1, idx+1, mp)
       case List/Nil:
         return mp

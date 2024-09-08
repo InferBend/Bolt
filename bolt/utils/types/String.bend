@@ -9,13 +9,13 @@ from ./List import List/append
 def String/concat(x, y):
   match x:
     case String/Cons:
-      return String/Cons{head: x.head, tail: String/concat(x.tail, y)}
+      return String/Cons(x.head,String/concat(x.tail, y))
     case String/Nil:
       return y
 
 
 def String/append(x, val):
-  return String/concat(x, String/Cons{head: val, tail: String/Nil})
+  return String/concat(x, String/Cons(val, String/Nil))
 
 
 def String/index(s, idx):

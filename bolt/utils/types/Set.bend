@@ -39,7 +39,7 @@ def Set/union(set1, set2):
       if Set/contains(set2, set1.head):
         return Set/union(set1.tail, set2)
       else:
-        return Set/Cons { head: set1.head, tail: Set/union(set1.tail, set2) }
+        return Set/Cons(set1.head, Set/union(set1.tail, set2))
     case Set/Nil:
       return set2
 
@@ -48,7 +48,7 @@ def Set/add(x, val):
   if Set/contains(x, val):
     return x
   else:
-    return Set/union(x, Set/Cons { head: val, tail: Set/Nil })
+    return Set/union(x, Set/Cons(val,  Set/Nil ))
 
 # Get length of Set
 def Set/length(x):
