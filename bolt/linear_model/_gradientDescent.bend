@@ -2,30 +2,11 @@
 # Author: Nihal Srivastava, June 2024
 ##############################
 
-# List
-
 def List/append(x, val):
-  
-  return List/concat(x, [val])
-
-# Metrics
-
-def meanSquaredError/aux(yTrue, yPred):
-  match yTrue:
-    case List/Cons:
-      match yPred:
-        case List/Cons:
-          return ((yTrue.head - yPred.head) ** 2.0) + meanSquaredError/aux(yTrue.tail, yPred.tail)
-        case List/Nil:
-          return 0.0
-    case List/Nil:
-      return 0.0
-
-def meanSquaredError(yTrue, yPred):
-  (l, yTrue) = List/length(yTrue)
-  return meanSquaredError/aux(yTrue, yPred) / to_f24(l)
+  return List/concat(x, List/Cons(val, List/Nil))
 
 #############################################################
+
 
 def subtract(x, y, z):
   match x:
@@ -64,6 +45,15 @@ def multiplyScalar(x, val, z):
       return z
 
 
+def multiplyWeights(x, weights, z):
+  match x:
+    case List/Cons:
+      z = List/append(z, sum(multiply(x.head, weights, []), []))
+      return multiplyWeights(x.tail, weights, z)
+    case List/Nil:
+      return z
+
+
 def addScalar(x, val, z):
   match x:
     case List/Cons:
@@ -72,12 +62,31 @@ def addScalar(x, val, z):
     case List/Nil:
       return z
 
+
+def meanSquaredError/aux(yTrue, yPred):
+  match yTrue:
+    case List/Cons:
+      match yPred:
+        case List/Cons:
+          return ((yTrue.head - yPred.head) ** 2.0) + meanSquaredError/aux(yTrue.tail, yPred.tail)
+        case List/Nil:
+          return 0.0
+    case List/Nil:
+      return 0.0
+
+
 def sum(x):
   match x:
     case List/Cons:
       return x.head + sum(x.tail)
     case List/Nil:
       return 0.0
+
+
+def meanSquaredError(yTrue, yPred):
+  (l, yTrue) = List/length(yTrue)
+  return meanSquaredError/aux(yTrue, yPred) / to_f24(l)
+
 
 def abs(x):
   if x < 0.0:
@@ -86,43 +95,121 @@ def abs(x):
     return x
 
 
-def gradientDescent/aux(x, y, iters, lr, thres, weight, bias, prevCost, costs):
+def multiplyY(x, y, z):
+  match x:
+    case List/Cons:
+      match y:
+        case List/Cons:
+          d = multiplyScalar(x.head, y.head, [])
+          z = List/append(z, d)
+          return multiplyY(x.tail, y.tail, z)
+        case List/Nil:
+          return z
+    case List/Nil:
+      return z
+
+
+def sumArrays(x, y, z):
+  match x:
+    case List/Cons:
+      match y:
+        case List/Cons:
+          d = x.head + y.head
+          return sumArrays(x.tail, y.tail, List/append(z, d))
+        case List/Nil:
+          return z
+    case List/Nil:
+      return z
+
+
+def sumOfWeights/aux(dw, sdw):
+  match dw:
+    case List/Cons:
+      sdw = sumArrays(dw.head, sdw, [])
+      return sumOfWeights/aux(dw.tail, sdw)
+    case List/Nil:
+      return sdw
+
+
+def sumOfWeights(dw):
+  n = getNumberOfFeatures(dw)
+  sdw = initializeArray(n, 0.0, [])
+  return sumOfWeights/aux(dw, sdw)
+
+
+def gradientDescent/aux(x, y, iters, lr, thres, weights, bias, prevCost, costs):
   if iters == 0:
-    return (weight, bias, costs)
+    return (weights, bias, costs)
   else:
-    wx = multiplyScalar(x, weight, [])
+    wx = multiplyWeights(x, weights, [])
     yPred = addScalar(wx, bias, [])
     cost = meanSquaredError(y, yPred)
     costs = List/append(costs, cost)
 
     if abs(prevCost - cost) < thres:
-      return (weight, bias, costs)
+      return (weights, bias, costs)
     else:
-      (l, x) = List/length(x)
+      (l, yTrue) = List/length(x)
       n = to_f24(l)
-      dw = (-2.0 / n) * sum(multiply(x, subtract(y, yPred, []), []))
       db = (-2.0 / n) * sum(subtract(y, yPred, []))
+      normalizer = (-2.0 / n)
+      dw = multiplyScalar(sumOfWeights(
+          multiplyY(x, subtract(y, yPred, []), [])), normalizer, [])
 
-      weight = weight - (lr * dw)
+      weights = subtract(weights, multiplyScalar(dw, lr, []), [])
       bias = bias - (lr * db)
 
-      return gradientDescent/aux(x, y, iters - 1, lr, thres, weight, bias, cost, costs)
+      return gradientDescent/aux(x, y, iters - 1, lr, thres, weights, bias, cost, costs)
+
+
+def initializeArray(size, value, arr):
+  if size == 0.0:
+    return arr
+  else:
+    return initializeArray(size - 1.0, value, List/append(arr, value))
+
+
+def getNumberOfFeatures(x):
+  n = -1.0
+  match x:
+    case List/Cons:
+      (l, xHead) = List/length(x.head)
+      n = to_f24(l)
+    case Lists/Nil:
+      n = -1.0
+  return n
 
 
 def gradientDescent(x, y, iters, lr, thres):
-  return gradientDescent/aux(x, y, iters, lr, thres, 0.1, 0.1, 999.9, [])
+  n = getNumberOfFeatures(x)
+  W = initializeArray(n, 0.1, [])
+  return gradientDescent/aux(x, y, iters, lr, thres, W, 0.1, 999.9, [])
 
 
-def predict(x, weight, bias):
-  return (x * weight) + bias
+def predict(x, weights, bias):
+  return sum(multiply(x, weights, []), []) + bias
 
 
 def main():
-  x = [32.502, 53.426, 61.530, 47.475, 59.813, 55.142, 52.211, 39.299, 48.105, 52.550,
-       45.419, 54.351, 44.164, 58.168, 56.727, 48.955, 44.687, 60.297, 45.618, 38.816]
-  y = [31.707, 68.777, 62.562, 71.546, 87.230, 78.211, 79.641, 59.171, 75.331, 71.300,
-       55.165, 82.478, 62.008, 75.392, 81.436, 60.723, 82.892, 97.379, 48.847, 56.877]
+  # x = Hours studied, Previous score, Sleep hours, sample questions, y = Performance indicator
+  # https://www.kaggle.com/datasets/nikhil7280/student-performance-multiple-linear-regression
 
-  (w, b, costs) = gradientDescent(x, y, 100, 0.0001, 0.000001)
-  y = predict(50.12, w, b)
-  return y
+#   x = [[7.0, 99.0, 9.0, 1.0], [4.0, 82.0, 4.0, 2.0], [8.0, 51.0, 7.0, 2.0],
+#        [5.0, 52.0, 5.0, 2.0], [7.0, 75.0, 8.0, 5.0], [3.0, 78.0, 9.0, 6.0],]
+  x= [[1.0, 45.0, 85.0],[1.0, 50.0, 43.0],
+     [1.0, 54.0, 78.0],
+     [1.0, 60.0, 58.0],
+     [1.0, 63.0, 72.0],
+     [1.0, 67.0, 80.0],
+     [1.0, 70.0, 65.0],
+     [1.0, 73.0, 90.0],
+     [1.0, 75.0, 60.0],
+     [1.0, 80.0, 85.0]]
+
+#   y = [91.0, 68.777, 45.0, 36.0, 66.0, 61.0]
+  y = [1.0, 0.0, 1.0, 0.0, 1.0, 1.0, 0.0, 1.0, 0.0, 1.0]
+
+  (weights, bias, costs) = gradientDescent(x, y, 100, 0.0001, 0.000001)
+  xn = [4.0, 82.0, 4.0, 1.0]
+  yn = predict(xn, weights, bias)
+  return yn

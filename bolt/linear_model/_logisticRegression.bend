@@ -1,7 +1,10 @@
 ##############################
 # Author: Jaisuraj Bantupalli, August 2024
 ##############################
-from ./_gradientDescent import (gradientDescent,List/append)
+from ./_linearRegression import (gradientDescent)
+from ../utils/types/List import List/append
+from ../utils/vector import *
+from ../utils/math import (sum, abs)
 
 type LogisticRegression:
   Model {weights, bias, cost}
@@ -38,39 +41,57 @@ def classify(prob):
   k=classify_helper(prob,[])
   return k
 
-def predict_helper(y,w,b,l):
-  match y:
+
+def predict_helper(x,w,b):
+  k=multiply_helper(x,w,[],[],b)
+  sig=sigmoid(k)
+  return sig
+
+def multiply_helper(x,weights,k,l,bias):
+  match x:
     case List/Cons:
-      d=predict1(y.head,w,b)
-      l=List/append(l,d)
-      return predict_helper(y.tail, w, b, l)
+      kk1=sum(multiply(x.head, weights, []), []) + bias
+    #   kk=multiply(x.head,weights,[])
+      l=List/append(l,kk1)
+      return multiply_helper(x.tail,weights,k,l,bias)
     case List/Nil:
       return l
-
-def predict11(y,w,b):
-  k=predict_helper(y,w,b,[])
-  return k
 
 def LogisticRegression/fit(x,y):
   (weights, bias, costs) = gradientDescent(x, y, 100, 0.0001, 0.000001)
   return LogisticRegression/Model(weights, bias, costs)
 
+
 def LogisticRegression/predict(model, x):
   match model:
     case LogisticRegression/Model:
-      y_pred = predict11(x, model.weights, model.bias)
+      y_pred = predict_helper(x, model.weights, model.bias)
       y_class = classify(y_pred)
       return y_class
 
 
 
 def main():
-  x = [32.502, 53.426, 61.530, 47.475, 59.813, 55.142, 52.211, 39.299, 48.105, 52.550,
-       45.419, 54.351, 44.164, 58.168, 56.727, 48.955, 44.687, 60.297, 45.618, 38.816]
-  y = [0.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.0, 1.0, 1.0,
-       0.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.0, 1.0]
+  x= [[1.0, 45.0, 85.0],
+     [1.0, 50.0, 43.0],
+     [1.0, 54.0, 78.0],
+     [1.0, 60.0, 58.0],
+     [1.0, 63.0, 72.0],
+     [1.0, 67.0, 80.0],
+     [1.0, 70.0, 65.0],
+     [1.0, 73.0, 90.0],
+     [1.0, 75.0, 60.0],
+     [1.0, 80.0, 85.0]]
+
+
+  y = [1.0, 0.0, 1.0, 0.0, 1.0, 1.0, 0.0, 1.0, 0.0, 1.0]
+
 
   lr_model = LogisticRegression/fit(x, y)
-  x_test=[22.09,65.90,55.34]
+  x_test = [[1.0, 68.0, 82.0],
+                   [1.0, 54.0, 78.0],
+                   [1.0, 10.0, 95.0]]
+
   y_pred= LogisticRegression/predict(lr_model,x_test)
+#   y_check= pred_11
   return y_pred
