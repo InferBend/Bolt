@@ -3,7 +3,7 @@
 ##############################
 
 from ../utils/types/List import *
-from ../utils/stats import (distance, mode, mean)
+from ../utils/stats import (distance, mean)
 
 
 def sort(xs):

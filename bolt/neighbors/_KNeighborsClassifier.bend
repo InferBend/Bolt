@@ -1,10 +1,34 @@
 ##############################
-# Author: Nihal Srivastava, May 2024
+# Author: Nihal Srivastava, Jun 2024
 ##############################
 
 from ../utils/types/List import *
-from ../utils/helper import sort
 from ../utils/stats import (distance, mode)
+
+
+def sort(xs):
+  match xs:
+    case List/Nil:
+      return List/Nil
+    case List/Cons:
+      return insert(xs.head, sort(xs.tail))
+
+
+def insert(v, xs):
+  match xs:
+    case List/Nil:
+      return List/Cons(v, List/Nil)
+    case List/Cons:
+      return swap_gt(v, xs.head, xs.tail)
+
+
+def swap_gt(v, x, xs):
+  (f1, e1) = v
+  (f2, e2) = x
+  if f2 > f1:
+    return List/Cons(v, List/Cons(x, xs))
+  else:
+    return List/Cons(x, insert(v, xs))
 
 
 def distanceBetweenPoints(points, x):
@@ -15,97 +39,55 @@ def distanceBetweenPoints(points, x):
       return 0.0
 
 
-def topKIndex(distances, i, n):
-  if i < n + 1:
-    match distances[i]:
-      case List/Cons:
-        d1 = List/index(distances[i], 0)
-        (d2, i2) = topKIndex(distances, i + 1, n)
-        if d1 < d2:
-          return (d1, i)
-        else:
-          return (d2, i2)
-      case List/Nil:
-        return (9999.99, -1)
-  else:
-    return (99999.99, -1)
-
-
-def knn/getDistances/aux(points, x, distances):
-  match points:
+def knn/getDistances(X, p, distances):
+  match X:
     case List/Cons:
-      d = distance(points.head, x)
+      d = distance(X.head, p)
       distances = List/append(distances, d)
-      return knn/getDistances/aux(points.tail, x, distances)
+      return knn/getDistances(X.tail, p, distances)
     case List/Nil:
       return distances
 
 
-def knn/getDistances(dataset, x, distances, i, n):
-  if i < n + 1:
-    distances_group = knn/getDistances/aux(dataset[i], x, [])
-    distances[i] = sort(distances_group)
-    return knn/getDistances(dataset, x, distances, i + 1, n)
-  else:
-    return distances
-
-
-def knn/aux(distances, k, nearest):
-  if k > 0:
-    (d, i) = topKIndex(distances, 0, 2)
-    (e, l) = List/popFront(distances[i])
-    distances[i] = l
-    nearest = List/append(nearest, i)
-    return knn/aux(distances, k - 1, nearest)
-  else:
-    return nearest
-
-
-def knnMain(dataset, p, k, n_class):
-  distances = knn/getDistances(dataset, p, {}, 0, n_class)
-  nearest = knn/aux(distances, k, [])
-  nearest = sort(nearest)
-  pred = mode(nearest)
-  return pred
-
-
-def emptyDict(dataset, n_class):
-  if n_class == -1:
-    return dataset
-  else:
-    dataset[n_class] = []
-    return emptyDict(dataset, n_class - 1)
-
-
-def makeDataset/aux(X, y, dataset):
-  match y:
+def List/indexedArray(a, i, c):
+  match a:
     case List/Cons:
-      match X:
-        case List/Cons:
-          dataset[y.head] = List/append(dataset[y.head], X.head)
-          return makeDataset/aux(X.tail, y.tail, dataset)
-        case List/Nil:
-          return dataset
+      c = List/append(c, (a.head, i))
+      return List/indexedArray(a.tail, i + 1, c)
     case List/Nil:
-      return dataset
+      return c
 
 
-def makeDataset(X, y, n_class):
-  dataset = emptyDict({}, n_class)
-  dataset = makeDataset/aux(X, y, dataset)
+def knnMain/aux(nearestPoints, y, k, nearestYs):
+  if k == 0:
+    return nearestYs
+  else:
+    match nearestPoints:
+      case List/Cons:
+        (distance, index) = nearestPoints.head
+        p = List/index(y, index)
+        nearestYs = List/append(nearestYs, p)
+        return knnMain/aux(nearestPoints.tail, y, k - 1, nearestYs)
+      case List/Nil:
+        return nearestYs
 
-  return dataset
+
+def knnMain(X, y, p, k):
+  distances = knn/getDistances(X, p, [])
+  distances = List/indexedArray(distances, 0, [])
+  nearestPoints = sort(distances)
+  nearestYs = knnMain/aux(nearestPoints, y, k, [])
+
+  return mode(nearestYs)
 
 
 def main():
   X = [[5.0, 3.0, 4.0], [3.0, 2.0, 2.0], [1.5, 9.0, 7.0], [7.0, 2.0, 3.0], [
       1.0, 12.0, 4.0], [2.0, 5.0, 3.0], [3.0, 6.0, 2.0], [2.0, 6.0, 2.5], [1.9, 5.8, 5.9]]
-  y = [0, 0, 0, 0, 1, 1, 1, 2, 2]
+  y = [0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 2.0, 2.0]
   p = [2.0, 7.0, 5.4]
   k = 3
-  n_class = 2
 
-  dataset = makeDataset(X, y, n_class)
-  nearest = knnMain(dataset, p, k, n_class)
+  nearest = knnMain(X, y, p, k)
 
   return nearest
