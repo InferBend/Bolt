@@ -73,4 +73,4 @@ def main():
   lr_model = LogisticRegression/fit(x, y)
   x_test=[22.09,65.90,55.34]
   y_pred= LogisticRegression/predict(lr_model,x_test)
-  return y_class
+  return y_pred
