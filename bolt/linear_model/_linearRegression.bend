@@ -6,6 +6,8 @@ from ../utils/types/List import List/append
 from ../utils/vector import *
 from ../utils/math import (sum, abs)
 
+type LinearRegression:
+  Model {weights, bias, cost}
 
 def multiplyWeights(x, weights, z):
   match x:
@@ -136,6 +138,14 @@ def gradientDescent(x, y, iters, lr, thres):
 def predict(x, weights, bias):
   return sum(multiply(x, weights, []), []) + bias
 
+def LinearRegression/fit(x, y):
+  (weights, bias, costs) = gradientDescent(x, y, 100, 0.0001, 0.000001)
+  return LinearRegression/Model(weights, bias, costs)
+
+def LinearRegression/predict(model, x):
+  match model:
+    case LinearRegression/Model:
+      return predict(x, model.weights, model.bias)
 
 def main():
   # x = Hours studied, Previous score, Sleep hours, sample questions, y = Performance indicator
