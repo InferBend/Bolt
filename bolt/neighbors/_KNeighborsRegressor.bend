@@ -58,7 +58,7 @@ def List/indexedArray(a, i, c):
       return c
 
 
-def knnMain/aux(nearestPoints, y, k, nearestYs):
+def knn/aux(nearestPoints, y, k, nearestYs):
   if k == 0:
     return nearestYs
   else:
@@ -67,16 +67,16 @@ def knnMain/aux(nearestPoints, y, k, nearestYs):
         (distance, index) = nearestPoints.head
         p = List/index(y, index)
         nearestYs = List/append(nearestYs, p)
-        return knnMain/aux(nearestPoints.tail, y, k - 1, nearestYs)
+        return knn/aux(nearestPoints.tail, y, k - 1, nearestYs)
       case List/Nil:
         return nearestYs
 
 
-def knnMain(X, y, p, k):
+def Knn/fit_predict(X, y, p, k):
   distances = knn/getDistances(X, p, [])
   distances = List/indexedArray(distances, 0, [])
   nearestPoints = sort(distances)
-  nearestYs = knnMain/aux(nearestPoints, y, k, [])
+  nearestYs = knn/aux(nearestPoints, y, k, [])
 
   return mean(nearestYs)
 
@@ -88,6 +88,6 @@ def main():
   p = [2.0, 7.0, 5.4]
   k = 3
 
-  nearest = knnMain(X, y, p, k)
+  nearest = Knn/fit_predict(X, y, p, k)
 
   return nearest
