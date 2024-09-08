@@ -62,7 +62,7 @@ def List/getColumn(X, feat_idx):
 def divideScalar/aux(x, value, y):
   match x:
     case List/Cons:
-      y = List/append(y, x.head / value)
+      y = List/append(y, x.head / to_f24(value))
       return divideScalar/aux(x.tail, value, y)
     case List/Nil:
       return y
@@ -300,8 +300,7 @@ def bestCriteria/aux(X, y, feat_idxs, best_gain, split_idx, split_thresh):
     case List/Cons:
       X_column = List/getColumn(X, feat_idxs.head)
       thresholds = find_unique(X_column, [])
-      (best_gain, split_idx, split_thresh) = bestCriteria/aux2(X_column,
-                                                               y, thresholds, best_gain, split_idx, split_thresh, feat_idxs.head)
+      (best_gain, split_idx, split_thresh) = bestCriteria/aux2(X_column, y, thresholds, best_gain, split_idx, split_thresh, feat_idxs.head)
       return bestCriteria/aux(X, y, feat_idxs.tail, best_gain, split_idx, split_thresh)
     case List/Nil:
       return (split_idx, split_thresh)
