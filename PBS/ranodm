@@ -1,0 +1,30 @@
+from ./layerBaker import (layer,layer/generatorAux,layer/generator,layer/operate,layer/propogate)
+
+def modelPropogate(input,model,out):
+  match input:
+    case List/Cons:
+      match out:
+        case List/Cons:
+          match model:
+            case List/Cons:
+              out=layer/propogate(input,model.head,[0])
+              match out:
+                case List/Cons:
+                  return modelPropogate(out,model.tail,[0])
+                case List/Nil:
+                  return input
+            case List/Nil:
+              return input
+        case List/Nil:
+          return input
+    case List/Nil:
+      return input
+        
+
+def main():
+  input=[1,2,3,4,5,6]
+  l1=layer{size:4,type:"normal",activation:"sigmoid"}
+
+  l11=layer/generator(l1)
+
+  model=[l11]
