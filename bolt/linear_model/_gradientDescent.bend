@@ -2,10 +2,8 @@
 # Author: Nihal Srivastava, June 2024
 ##############################
 
-def List/append(x, val):
-  return List/concat(x, List/Cons(val, List/Nil))
-
-#############################################################
+from ../utils/types/List import (List/append)
+from ../metrics/_regression import (meanSquaredError)
 
 
 def subtract(x, y, z):
@@ -81,11 +79,6 @@ def sum(x):
       return x.head + sum(x.tail)
     case List/Nil:
       return 0.0
-
-
-def meanSquaredError(yTrue, yPred):
-  (l, yTrue) = List/length(yTrue)
-  return meanSquaredError/aux(yTrue, yPred) / to_f24(l)
 
 
 def abs(x):

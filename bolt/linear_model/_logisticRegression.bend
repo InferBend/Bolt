@@ -21,11 +21,6 @@ def sigmoid(ls):
     case List/Nil:
       return List/Nil
 
-
-def predict1(x, weight, bias):
-  z = (x * weight) + bias
-  return sigmoid(z)
-
 def classify_helper(prob,l):
   match prob:
     case List/Cons:
@@ -38,24 +33,23 @@ def classify_helper(prob,l):
       return l
 
 def classify(prob):
-  k=classify_helper(prob,[])
-  return k
+  prob_list=classify_helper(prob,[])
+  return prob_list
 
 
 def predict_helper(x,w,b):
-  k=multiply_helper(x,w,[],[],b)
-  sig=sigmoid(k)
-  return sig
+  mlr_output=multiply_helper(x,w,[],[],b)
+  logistic_regression_probabilities=sigmoid(mlr_output)
+  return logistic_regression_probabilities
 
-def multiply_helper(x,weights,k,l,bias):
+def multiply_helper(x,weights,k,mlr_output,bias):
   match x:
     case List/Cons:
-      kk1=sum(multiply(x.head, weights, []), []) + bias
-    #   kk=multiply(x.head,weights,[])
-      l=List/append(l,kk1)
-      return multiply_helper(x.tail,weights,k,l,bias)
+      mlr_single_output=sum(multiply(x.head, weights, []), []) + bias
+      mlr_output=List/append(mlr_output,mlr_single_output)
+      return multiply_helper(x.tail,weights,k,mlr_output,bias)
     case List/Nil:
-      return l
+      return mlr_output
 
 def LogisticRegression/fit(x,y):
   (weights, bias, costs) = gradientDescent(x, y, 100, 0.0001, 0.000001)
@@ -66,10 +60,8 @@ def LogisticRegression/predict(model, x):
   match model:
     case LogisticRegression/Model:
       y_pred = predict_helper(x, model.weights, model.bias)
-      y_class = classify(y_pred)
-      return y_class
-
-
+      y_pred_classes = classify(y_pred)
+      return y_pred_classes
 
 def main():
   x= [[1.0, 45.0, 85.0],
@@ -83,15 +75,10 @@ def main():
      [1.0, 75.0, 60.0],
      [1.0, 80.0, 85.0]]
 
-
   y = [1.0, 0.0, 1.0, 0.0, 1.0, 1.0, 0.0, 1.0, 0.0, 1.0]
-
-
-  lr_model = LogisticRegression/fit(x, y)
+  logreg_model = LogisticRegression/fit(x, y)
   x_test = [[1.0, 68.0, 82.0],
                    [1.0, 54.0, 78.0],
                    [1.0, 10.0, 95.0]]
-
-  y_pred= LogisticRegression/predict(lr_model,x_test)
-#   y_check= pred_11
-  return y_pred
+  y_pred_classes= LogisticRegression/predict(logreg_model,x_test)
+  return y_pred_classes
