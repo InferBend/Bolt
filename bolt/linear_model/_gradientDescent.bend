@@ -61,18 +61,6 @@ def addScalar(x, val, z):
       return z
 
 
-def meanSquaredError/aux(yTrue, yPred):
-  match yTrue:
-    case List/Cons:
-      match yPred:
-        case List/Cons:
-          return ((yTrue.head - yPred.head) ** 2.0) + meanSquaredError/aux(yTrue.tail, yPred.tail)
-        case List/Nil:
-          return 0.0
-    case List/Nil:
-      return 0.0
-
-
 def sum(x):
   match x:
     case List/Cons:
