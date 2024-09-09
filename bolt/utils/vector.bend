@@ -36,3 +36,18 @@ def multiplyScalar(x, val, z):
       return multiplyScalar(x.tail, val, z)
     case List/Nil:
       return z
+    
+def subtractScalar(x, val, z):
+  match x:
+    case List/Cons:
+      z = List/append(z, x.head - val)
+      return subtractScalar(x.tail, val, z)
+    case List/Nil:
+      return z
+
+def divideScalar(ls, n, z):
+  match ls:
+    case List/Cons:
+      return divideScalar(ls.tail, n, List/append(z, ls.head / n))
+    case List/Nil:
+      return z 
