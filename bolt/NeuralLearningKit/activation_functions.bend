@@ -1,5 +1,7 @@
 from ../utils/math import (max, sum)
+from ../utils/types/List import List/append
 from ../utils/vector import (subtractScalar, divideScalar)
+
 e = 2.718281829
 
 def sigmoid/aux(z):
@@ -50,9 +52,9 @@ def dRelu(ls):
       return List/Nil
 
 def exponential(x, ls):
-  match ls:
+  match x:
     case List/Cons:
-      return exponential(x.tail, List/append(ls, e**x))
+      return exponential(x.tail, List/append(ls, e**x.head))
     case List/Nil:
       return ls
 
