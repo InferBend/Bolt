@@ -79,3 +79,23 @@ def softmax(ls):
   probabilities = divideScalar(exp_values, total, [])
 
   return probabilities
+
+def swish/aux(x):
+  return x * sigmoid/aux(x)
+
+def swish(ls):
+  match ls:
+    case List/Cons:
+      return List/Cons(swish/aux(ls.head), swish(ls.tail))
+    case List/Nil:
+      return List/Nil
+
+def dSwish/aux(x):
+  return swish/aux(x) + sigmoid/aux(x) * (1 - swish/aux(x))
+
+def dSwish(ls):
+  match ls:
+    case List/Cons:
+      return List/Cons(dSwish/aux(ls.head), swish(ls.tail))
+    case List/Nil:
+      return List/Nil
