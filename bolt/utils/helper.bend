@@ -31,7 +31,7 @@ def Number/parse_digit(digit):
   return digit - '0'
 
 
-def Number/parse_decimal(str):
+def Number/parse_integer(str):
   # This is your Number/Cast function
   acc = 0
   fold str with acc:
@@ -42,4 +42,4 @@ def Number/parse_decimal(str):
 
 
 def main():
-  return Number/parse_decimal("123")
+  return Number/parse_integer("123")
