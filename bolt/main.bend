@@ -1,7 +1,6 @@
-from fileParser/csvParser import read_csv
+from fileParser/csvParser import (read_csv, write_csv)
+from ./utils/types/String import (string_equal, String/splitToList)
 
 def main():
   path = "./sample.csv"
-  df = read_csv(path)
-
-  return df
+  return read_csv(path)

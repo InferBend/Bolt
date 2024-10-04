@@ -3,6 +3,8 @@
 ##############################
 # LIST Data Structure - Imp Syntax #
 
+from ./String import String/concat
+
 def List/clear(x):
   return []
 
@@ -100,3 +102,13 @@ def List/contains(lst, elem):
         return List/contains(lst.tail, elem)
     case List/Nil:
       return 0
+
+def List/join/aux(ls, new_string, delimiter):
+  match ls:
+    case List/Cons:
+      return List/join/aux(ls.tail, String/concat(new_string, String/concat(ls.head, delimiter)), delimiter)
+    case List/Nil:
+      return new_string
+
+def List/join(ls, delimiter):
+  return List/join/aux(ls, "", delimiter)
