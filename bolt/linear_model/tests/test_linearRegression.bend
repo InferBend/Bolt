@@ -1,7 +1,7 @@
-from ../../utils/testing import assert_almost_equal
-from ../_linearRegression import (LinearRegression/fit, LinearRegression/predict)
+from ./utils/testing import assert_almost_equal
+from ./linear_model/_linearRegression import (LinearRegression/fit, LinearRegression/predict)
 
-def test_linearRegression():
+def main():
   # y = 2x + 5
   x = [[0.0], [1.0], [2.0], [3.0], [4.0], [5.0], [6.0], [7.0], [8.0]]
   y = [5.0, 7.0, 9.0, 11.0, 13.0, 15.0, 17.0, 19.0, 21.0]

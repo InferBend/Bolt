@@ -38,12 +38,14 @@ jobs:
       run: |
         for file in $(find . -name 'test_*.bend'); do
           echo "Running test file: $file"
-          bend run "$file" > test-output.log
+          cp "$file" "./bolt/test.bend"
+          bend run "./bolt/test.bend" > test-output.log
           if grep -q "FAIL" test-output.log; then
             echo "Tests failed. Check the logs."
             exit 1
           else
             echo "All tests passed successfully."
+          rm "./bolt/test.bend"
           fi
         done
 
