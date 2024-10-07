@@ -12,4 +12,7 @@ def test_linearRegression():
   yn = [23.0, 7.0, 3.0]
   y_pred = LinearRegression/predict(model, xn)
 
-  return assert_almost_equal(y_pred, yn)
+  if(assert_almost_equal(y_pred, yn) == 1):
+    return "PASS"
+  else:
+    return "FAIL"
