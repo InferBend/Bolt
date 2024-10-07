@@ -139,13 +139,21 @@ def predict(x, weights, bias):
   return sum(multiply(x, weights, []), []) + bias
 
 def LinearRegression/fit(x, y):
-  (weights, bias, costs) = gradientDescent(x, y, 100, 0.0001, 0.000001)
+  (weights, bias, costs) = gradientDescent(x, y, 500, 0.01, 0.0001)
   return LinearRegression/Model(weights, bias, costs)
 
-def LinearRegression/predict(model, x):
+def LinearRegression/predictX(model, x):
   match model:
     case LinearRegression/Model:
       return predict(x, model.weights, model.bias)
+
+def LinearRegression/predict(model, x):
+  match x:
+    case List/Cons:
+      return List/concat([LinearRegression/predictX(model, x.head)], LinearRegression/predict(model, x.tail))
+    case List/Nil:
+      return []
+      
 
 def main():
   # x = Hours studied, Previous score, Sleep hours, sample questions, y = Performance indicator
