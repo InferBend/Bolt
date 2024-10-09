@@ -10,48 +10,48 @@ on:
 
 jobs:
   test:
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v3
-    
-    - name: Set up Rust
-      uses: actions-rs/toolchain@v1
-      with:
-        toolchain: stable
-        profile: minimal
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-    - name: Set up Bend
-      run: |
-        # Install any dependencies or required tools for Bend
-        cargo install hvm
-        cargo install bend-lang
-      
-    - name: Check Hvm and bend versions
-      run: |
-        hvm --version
-        bend --version
+      - name: Set up Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          profile: minimal
 
-    - name: Run All Test Files
-      id: bend-tests
-      run: |
-        for file in $(find . -name 'test_*.bend'); do
-          echo "Running test file: $file"
-          cp "$file" "./bolt/test.bend"
-          bend run "./bolt/test.bend" > test-output.log
-          if grep -q "FAIL" test-output.log; then
-            echo "Tests failed. Check the logs."
-            exit 1
-          else
-            echo "All tests passed successfully."
-          rm "./bolt/test.bend"
-          fi
-        done
+      - name: Set up Bend
+        run: |
+          # Install any dependencies or required tools for Bend
+          cargo install hvm
+          cargo install bend-lang
 
-    - name: Upload Test Logs
-      if: failure()
-      uses: actions/upload-artifact@v3
-      with:
-        name: test-logs
-        path: test-output.log
+      - name: Check Hvm and bend versions
+        run: |
+          hvm --version
+          bend --version
+
+      - name: Run All Test Files
+        id: bend-tests
+        run: |
+          for file in $(find . -name 'test_*.bend'); do
+            echo "Running test file: $file"
+            cp "$file" "./bolt/test.bend"
+            bend run "./bolt/test.bend" > test-output.log
+            if grep -q "FAIL" test-output.log; then
+              echo "Tests failed. Check the logs."
+              exit 1
+            else
+              echo "All tests passed successfully."
+            rm "./bolt/test.bend"
+            fi
+          done
+
+      - name: Upload Test Logs
+        if: failure()
+        uses: actions/upload-artifact@v3
+        with:
+          name: test-logs
+          path: test-output.log
