@@ -62,7 +62,7 @@ def List/getColumn(X, feat_idx):
 def divideScalar/aux(x, value, y):
   match x:
     case List/Cons:
-      y = List/append(y, x.head / to_f24(value))
+      y = List/append(y, x.head / u24/to_f24(value))
       return divideScalar/aux(x.tail, value, y)
     case List/Nil:
       return y

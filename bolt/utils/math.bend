@@ -96,4 +96,4 @@ def main():
   x = 7.0
   y = [1.0, 2.0, 3.0]
   (l, y) = List/length(y)
-  return sum(y) / to_f24(l)
+  return sum(y) / u24/to_f24(l)

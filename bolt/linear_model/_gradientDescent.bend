@@ -131,7 +131,7 @@ def gradientDescent/aux(x, y, iters, lr, thres, weights, bias, prevCost, costs):
       return (weights, bias, costs)
     else:
       (l, yTrue) = List/length(x)
-      n = to_f24(l)
+      n = u24/to_f24(l)
       db = (-2.0 / n) * sum(subtract(y, yPred, []))
       normalizer = (-2.0 / n)
       dw = multiplyScalar(sumOfWeights(
@@ -155,7 +155,7 @@ def getNumberOfFeatures(x):
   match x:
     case List/Cons:
       (l, xHead) = List/length(x.head)
-      n = to_f24(l)
+      n = u24/to_f24(l)
     case Lists/Nil:
       n = -1.0
   return n

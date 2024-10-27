@@ -42,7 +42,7 @@ def mode(x):
 
 def mean(x):
   (l, x) = List/length(x)
-  return sum(x) / to_f24(l)
+  return sum(x) / u24/to_f24(l)
 
 
 def main():
