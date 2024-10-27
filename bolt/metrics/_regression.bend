@@ -15,7 +15,7 @@ def meanSquaredError/aux(yTrue, yPred):
 
 def meanSquaredError(yTrue, yPred):
   (l, yTrue) = List/length(yTrue)
-  return meanSquaredError/aux(yTrue, yPred) / to_f24(l)
+  return meanSquaredError/aux(yTrue, yPred) / u24/to_f24(l)
 
 
 def meanAbsoluteError/aux(yTrue, yPred):
@@ -32,7 +32,7 @@ def meanAbsoluteError/aux(yTrue, yPred):
 
 def meanAbsoluteError(yTrue, yPred):
   (l, yTrue) = List/length(yTrue)
-  return meanAbsoluteError/aux(yTrue, yPred) / to_f24(l)
+  return meanAbsoluteError/aux(yTrue, yPred) / u24/to_f24(l)
 
 
 def totalSumOfSquares/aux(yTrue, yMean):
@@ -45,7 +45,7 @@ def totalSumOfSquares/aux(yTrue, yMean):
 
 def totalSumOfSquares(yTrue):
   (l, yTrue) = List/length(yTrue)
-  yMean = sum(yTrue) / to_f24(l)
+  yMean = sum(yTrue) / u24/to_f24(l)
   return totalSumOfSquares/aux(yTrue, yMean)
 
 

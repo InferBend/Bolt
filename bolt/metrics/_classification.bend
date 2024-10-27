@@ -15,4 +15,4 @@ def accuracy_score/aux(yTrue, yPred):
 
 def accuracy_score(yTrue, yPred):
   (l, yTrue) = List/length(yTrue)
-  return accuracy_score/aux(yTrue, yPred) / to_f24(l)
+  return accuracy_score/aux(yTrue, yPred) / u24/to_f24(l)
