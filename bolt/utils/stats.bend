@@ -1,6 +1,6 @@
 from ./math import sum
 from ./types/List import (List/index)
-
+from ./helper import sort
 
 def distance/aux(x, y, i):
   match x:
@@ -37,6 +37,8 @@ def mode/aux(x, count, previous, maxCount, currentMax):
 
 
 def mode(x):
+  # TODO: Think of an alternative to -1.0 as previous number
+  x = sort(x)
   return mode/aux(x, 0.0, -1.0, 0.0, -1.0)
 
 

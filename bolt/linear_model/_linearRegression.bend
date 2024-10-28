@@ -95,6 +95,19 @@ def gradientDescent/aux(x, y, iters, lr, thres, weights, bias, prevCost, costs):
     cost = meanSquaredError(y, yPred)
     costs = List/append(costs, cost)
 
+    # TODO: implement invscaling eta = eta0 / pow(t, power_t)
+    # t = Number of weight updates performed during training. Same as (n_iter_ * n_samples + 1)
+    # match x:
+    #   case List/Cons:
+    #     n_samples, xHead = List/length(x.head)
+    #   case List/Nil:
+    #     n_samples, xHead = 0.0
+
+    # t = u24/to_f24(1000 - iters + 1)
+    # eta = lr / (t ** 0.25)
+    
+    eta = lr
+
     if abs(prevCost - cost) < thres:
       return (weights, bias, costs)
     else:
@@ -105,10 +118,10 @@ def gradientDescent/aux(x, y, iters, lr, thres, weights, bias, prevCost, costs):
       dw = multiplyScalar(sumOfWeights(
           multiplyY(x, subtract(y, yPred, []), [])), normalizer, [])
 
-      weights = subtract(weights, multiplyScalar(dw, lr, []), [])
-      bias = bias - (lr * db)
+      weights = subtract(weights, multiplyScalar(dw, eta, []), [])
+      bias = bias - (eta * db)
 
-      return gradientDescent/aux(x, y, iters - 1, lr, thres, weights, bias, cost, costs)
+      return gradientDescent/aux(x, y, iters - 1, eta, thres, weights, bias, cost, costs)
 
 
 def initializeArray(size, value, arr):
@@ -139,7 +152,7 @@ def predict(x, weights, bias):
   return sum(multiply(x, weights, []), []) + bias
 
 def LinearRegression/fit(x, y):
-  (weights, bias, costs) = gradientDescent(x, y, 500, 0.01, 0.0001)
+  (weights, bias, costs) = gradientDescent(x, y, 1000, 0.01, 0.001)
   return LinearRegression/Model(weights, bias, costs)
 
 def LinearRegression/predictX(model, x):
