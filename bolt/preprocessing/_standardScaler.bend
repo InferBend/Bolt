@@ -1,4 +1,4 @@
-from ../utils/_math import sum
+from ../utils/math import sum
 from ../utils/types/List import List/append
 
 object StandardScaler {std, mean_val}
