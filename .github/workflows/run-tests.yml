@@ -1,4 +1,4 @@
-name: CI for Bend
+name: CI for Bolt
 
 on:
   push:
