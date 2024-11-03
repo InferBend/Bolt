@@ -27,7 +27,7 @@ def assert_almost_equal(l1, l2):
     case List/Cons:
       match l2:
         case List/Cons:
-          if(abs(l1.head - l2.head) < 1.5 * 10**(-1)):
+          if(abs(l1.head - l2.head) < 1.5 * 10.0**(-1.0)):
             return assert_almost_equal(l1.tail, l2.tail)
           else:
             return 0

@@ -1,5 +1,5 @@
-from ./utils/testing import assert_almost_equal
-from ./neighbors/_KNeighborsClassifier import Knn/fit_predict
+from ./utils/testing import assert_equal
+from ./neighbors/_KNeighborsClassifier import (Knn/fit, Knn/predict)
 
 def check_knnClassifier():
   k = 5
@@ -10,15 +10,17 @@ def check_knnClassifier():
     [27.0, 27.0, 1.0, 0.0], [36.0, 50.0, 0.0, 2.0]]
 
   y = [0.0, 1.0, 0.0, 1.0, 1.0, 1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0]
+  k = 5
+  p = 2.0
 
-  x_test = [[26.0, 24.0, 0.0, 1.0], [27.0, 27.0, 1.0, 0.0], [39.0, 53.0, 1.0, 3.0], [32.0, 36.0, 0.0, 1.0], [36.0, 50.0, 0.0, 2.0]]
-  y_actual = [0.0, 0.0, 1.0, 1.0, 1.0]
+  model = Knn/fit(X, y, k, p)
 
-  y1 = Knn/fit_predict(X, y, [26.0, 24.0, 0.0, 1.0], k)
-  y2 = Knn/fit_predict(X, y, [27.0, 27.0, 1.0, 0.0], k)
-  y3 = Knn/fit_predict(X, y, [39.0, 53.0, 1.0, 3.0], k)
+  x_test = [[26.0, 24.0, 0.0, 1.0], [27.0, 27.0, 1.0, 0.0], [39.0, 53.0, 1.0, 3.0]]
+  y_actual = [0.0, 0.0, 1.0]
+  
+  y_pred = Knn/predict(model, x_test)
 
-  return (y1 == 0.0) & (y2 == 0.0) & (y3 == 1.0)
+  return assert_equal(y_actual, y_pred)
 
 def main():
   if check_knnClassifier():
