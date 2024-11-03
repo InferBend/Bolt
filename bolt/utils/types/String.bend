@@ -28,6 +28,9 @@ def String/index(s, idx):
     case String/Nil:
       return "Out of bound"
 
+def String/cast(n):
+  # This is your String/Cast function
+  return String/Cons(n, String/Nil)
 
 def String/splitAtLetter/aux(s1, s2, value):
   match s2:

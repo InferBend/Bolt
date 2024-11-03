@@ -52,7 +52,7 @@ def multiply_helper(x,weights,k,mlr_output,bias):
       return mlr_output
 
 def LogisticRegression/fit(x,y):
-  (weights, bias, costs) = gradientDescent(x, y, 100, 0.0001, 0.000001)
+  (weights, bias, costs) = gradientDescent(x, y, 100, 0.0001, 0.0001)
   return LogisticRegression/Model(weights, bias, costs)
 
 
