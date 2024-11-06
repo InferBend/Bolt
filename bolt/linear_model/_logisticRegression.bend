@@ -21,7 +21,7 @@ def sigmoid(ls):
     case List/Nil:
       return List/Nil
 
-def classify_helper(prob,l):
+def classify_helper(prob, l):
   match prob:
     case List/Cons:
       if prob.head>0.5:
@@ -37,12 +37,12 @@ def classify(prob):
   return prob_list
 
 
-def predict_helper(x,w,b):
+def predict_helper(x, w, b):
   mlr_output=multiply_helper(x,w,[],[],b)
   logistic_regression_probabilities=sigmoid(mlr_output)
   return logistic_regression_probabilities
 
-def multiply_helper(x,weights,k,mlr_output,bias):
+def multiply_helper(x, weights, k, mlr_output, bias):
   match x:
     case List/Cons:
       mlr_single_output=sum(multiply(x.head, weights, []), []) + bias
@@ -51,8 +51,8 @@ def multiply_helper(x,weights,k,mlr_output,bias):
     case List/Nil:
       return mlr_output
 
-def LogisticRegression/fit(x,y):
-  (weights, bias, costs) = gradientDescent(x, y, 100, 0.0001, 0.0001)
+def LogisticRegression/fit(x: List(List(f24)), y: List(f24), max_iter: u24, learning_rate: f24, tol: f24):
+  (weights, bias, costs) = gradientDescent(x, y, max_iter, learning_rate, tol)
   return LogisticRegression/Model(weights, bias, costs)
 
 
@@ -76,7 +76,13 @@ def main():
      [1.0, 80.0, 85.0]]
 
   y = [1.0, 0.0, 1.0, 0.0, 1.0, 1.0, 0.0, 1.0, 0.0, 1.0]
-  logreg_model = LogisticRegression/fit(x, y)
+
+  max_iter = 100
+  learning_rate = 0.0001
+  tol = 0.0001
+
+
+  logreg_model = LogisticRegression/fit(x, y, max_iter, learning_rate, tol)
   x_test = [[1.0, 68.0, 82.0],
                    [1.0, 54.0, 78.0],
                    [1.0, 10.0, 95.0]]

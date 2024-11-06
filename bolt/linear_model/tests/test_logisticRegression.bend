@@ -9,16 +9,20 @@ def main():
 
   y = [0.0, 1.0, 0.0, 1.0, 1.0, 1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0]
 
-  logreg_model = LogisticRegression/fit(x, y)
+  max_iter = 100
+  learning_rate = 0.0001
+  tol = 0.0001
+
+  logreg_model = LogisticRegression/fit(x, y, max_iter, learning_rate, tol)
 
   x_test = [[26.0, 24.0, 0.0, 1.0], [27.0, 27.0, 1.0, 0.0], [39.0, 53.0, 1.0, 3.0], [32.0, 36.0, 0.0, 1.0], [36.0, 50.0, 0.0, 2.0]]
-  y_pred = LogisticRegression/predict(logreg_model,x_test)
+  y_pred = LogisticRegression/predict(logreg_model, x_test)
 
   y_actual = [0.0, 0.0, 1.0, 1.0, 1.0]
 
   return "PASS"
   
-#   if(assert_almost_equal(y_pred, yn) == 1):
-#     return "PASS"
-#   else:
-#     return "FAIL"
+  # if(assert_almost_equal(y_pred, yn) == 1):
+  #   return "PASS"
+  # else:
+  #   return "FAIL"
