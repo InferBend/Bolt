@@ -1,27 +1,5 @@
 from ./preprocessing/_standardScaler import (StandardScaler, standard_scaler, transform)
-from ./utils/testing import assert_equal
-
-# @TODO: Move to testing.bend
-
-
-def assert_multi_array(l1, l2):
-  match l1:
-    case List/Cons:
-      match l2:
-        case List/Cons:
-          if (assert_equal(l1.head, l2.head) == 1):
-            return assert_multi_array(l1.tail, l2.tail)
-          else:
-            return 0
-        case List/Nil:
-          return 0
-    case List/Nil:
-      match l2:
-        case List/Cons:
-          return 0
-        case List/Nil:
-          return 1
-
+from ./utils/testing import assert_multi_array
 
 def main():
   x = [[1.0, 2.0], [10.0, 5.0]]

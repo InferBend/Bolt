@@ -1,42 +1,9 @@
 from ../utils/math import sum
 from ../utils/types/List import (List/append, List/appendFront)
 from ../utils/stats import mean
-from ../utils/vector import (subtract, multiply, multiplyScalar)
+from ../utils/vector import (subtract, multiply, multiplyScalar, initializeArray, vectorSum, vectorPower)
 
 object StandardScaler {stddev, featureMean}
-
-############# # @TODO: Move to vector.bend ###########################
-
-
-def vectorSum(x, y):
-  match x:
-    case List/Cons:
-      match y:
-        case List/Cons:
-          d = (x.head + y.head)
-          return List/appendFront(vectorSum(x.tail, y.tail), d)
-        case List/Nil:
-          return []
-    case List/Nil:
-      return []
-
-
-def initializeArray(size, value, arr):
-  if size == 0.0:
-    return arr
-  else:
-    return initializeArray(size - 1.0, value, List/append(arr, value))
-
-
-def vectorPower(x, val):
-  match x:
-    case List/Cons:
-      return List/appendFront(vectorPower(x.tail, val), x.head ** val)
-    case List/Nil:
-      return []
-
-############# MOVE THESE ###########################
-
 
 def deviationSum(x, meanX):
   match x:
@@ -52,7 +19,7 @@ def deviationSum(x, meanX):
 def scaler(x, meanX, stdev, out):
   match x:
     case List/Cons:
-      return scaler(x.tail, meanX, stdev, List/append(out, multiply(subtract(x.head, meanX, []), 1.0 / stdev, [])))
+      return scaler(x.tail, meanX, stdev, List/append(out, multiply(subtract(x.head, meanX, []), vectorPower(stdev, -1.0), [])))
     case List/Nil:
       return out
 
@@ -61,7 +28,6 @@ def inverseScaler(x, meanX, stdev, out):
   match x:
     case List/Cons:
       return inverseScaler(x.tail, meanX, stdev, List/append(out, vectorSum(multiply(x.head, stdev, []), meanX)))
-      # return inverseScaler(x.tail, meanX, stdev, List/append(out, ((x.head * stdev) + meanX)))
     case List/Nil:
       return out
 
