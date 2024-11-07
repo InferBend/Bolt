@@ -6,7 +6,7 @@ def check_distance():
   y = [5.0, -2.0, 0.0]
   actual_dist = 6.40312
 
-  result = distance(x, y)
+  result = distance(x, y, 2.0)
   return result == actual_dist
 
 def check_mean():

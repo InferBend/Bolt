@@ -5,10 +5,11 @@
 # List imports
 
 from ../utils/types/List import (List/index, List/append, List/contains)
+from ./utils/types/Set import (Set/add)
 from ../utils/helper import sort
 from ../utils/math import (sum, log)
-from ../utils/random import *
-
+from ./utils/stats import (mode)
+from ./utils/random import *
 
 def List/lengthInt(x):
   match x:
@@ -17,21 +18,8 @@ def List/lengthInt(x):
     case List/Nil:
       return 0
 
-
-def Set/add(x, val):
-  match x:
-    case List/Cons:
-      if x.head == val:
-        return x
-      else:
-        return List/concat([x.head], Set/add(x.tail, val))
-    case List/Nil:
-      return [val]
-
-
 def log2(z):
   return log(z) / log(2.0)
-
 
 def List/bulkIndex/aux(x, indexes, y):
   match indexes:
@@ -41,10 +29,8 @@ def List/bulkIndex/aux(x, indexes, y):
     case List/Nil:
       return y
 
-
 def List/bulkIndex(x, indexes):
   return List/bulkIndex/aux(x, indexes, [])
-
 
 def List/getColumn/aux(X, feat_idx, y):
   match X:
@@ -85,28 +71,6 @@ def find_unique(ls, s):
       return s
 
 #################################
-
-
-def mode/aux(x, count, previous, maxCount, currentMax):
-  match x:
-    case List/Cons:
-      if x.head == previous:
-        return mode/aux(x.tail, count + 1, x.head, maxCount, currentMax)
-      else:
-        if maxCount < count:
-          return mode/aux(x.tail, 1, x.head, count, previous)
-        else:
-          return mode/aux(x.tail, 1, x.head, maxCount, currentMax)
-    case List/Nil:
-      if maxCount < count:
-        return previous
-      else:
-        return currentMax
-
-
-def mode(x):
-  return mode/aux(x, 0, -1, 0, -1)
-
 
 def List/createRange(current, upper, y):
   if current == upper:
@@ -209,10 +173,11 @@ def DecisionTree/fit(X, y):
   min_samples_split = 2
   match X:
     case List/Cons:
-      n_feats = List/lengthInt(X.head)
+      (n, XHead) = List/length(X.head)
+      (n_feats, XHead) = (f24/to_u24(n), XHead)
     case List/Nil:
-      n_feats = 0
-
+      (n_feats, XHead) = (0, [])
+  
   tree = DecisionTree/growTree(X, y, 0, max_depth, min_samples_split, n_feats)
   return tree
 
@@ -340,24 +305,30 @@ def split(X_column, split_thresh):
   return (left_idx, right_idx)
 
 
-def DecisionTree/traverseTree(x, node):
-  match node:
+def DecisionTree/predictX(model, x):
+  match model:
     case DecisionTree/Node:
-      if (List/index(node.feature) < node.threshold):
-        return DecisionTree/traverseTree(x, node.left)
+      if (List/index(x, model.feature) < model.threshold):
+        return DecisionTree/predictX(model.left, x)
       else:
-        return DecisionTree/traverseTree(x, node.right)
+        return DecisionTree/predictX(model.right, x)
     case DecisionTree/Leaf:
-      return node.value
+      return model.value
 
+def DecisionTree/predict(model, x):
+  match x:
+    case List/Cons:
+      return List/concat([DecisionTree/predictX(model, x.head)], DecisionTree/predict(model, x.tail))
+    case List/Nil:
+      return []   
 
 def main():
   X = [[5.0, 3.0, 4.0], [3.0, 2.0, 2.0], [1.5, 9.0, 7.0], [7.0, 2.0, 3.0], [
       1.0, 12.0, 4.0], [2.0, 5.0, 3.0], [3.0, 6.0, 2.0], [2.0, 6.0, 2.5], [1.9, 5.8, 5.9]]
   y = [0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 2.0, 2.0]
-  # tree = DecisionTree/fit(X, y)
+  model = DecisionTree/fit(X, y)
 
-  # x = [2.0, 7.0, 5.4]
-  # pred = DecisionTree/traverseTree(x, tree)
+  x = [[2.0, 7.0, 5.4], [5.0, 3.0, 4.0], [1.5, 10.0, 3.0]]
+  y_pred = DecisionTree/predict(model, x)
 
-  return 1
+  return y_pred

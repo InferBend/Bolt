@@ -9,6 +9,7 @@ from ../utils/math import (sum, abs)
 type LinearRegression:
   Model {weights, bias, cost}
 
+
 def multiplyWeights(x, weights, z):
   match x:
     case List/Cons:
@@ -105,7 +106,7 @@ def gradientDescent/aux(x, y, iters, lr, thres, weights, bias, prevCost, costs):
 
     # t = u24/to_f24(1000 - iters + 1)
     # eta = lr / (t ** 0.25)
-    
+
     eta = lr
 
     if abs(prevCost - cost) < thres:
@@ -151,14 +152,17 @@ def gradientDescent(x, y, iters, lr, thres):
 def predict(x, weights, bias):
   return sum(multiply(x, weights, []), []) + bias
 
-def LinearRegression/fit(x, y):
-  (weights, bias, costs) = gradientDescent(x, y, 1000, 0.01, 0.001)
+
+def LinearRegression/fit(x, y, max_iter, learning_rate, tol):
+  (weights, bias, costs) = gradientDescent(x, y, max_iter, learning_rate, tol)
   return LinearRegression/Model(weights, bias, costs)
+
 
 def LinearRegression/predictX(model, x):
   match model:
     case LinearRegression/Model:
       return predict(x, model.weights, model.bias)
+
 
 def LinearRegression/predict(model, x):
   match x:
@@ -166,18 +170,22 @@ def LinearRegression/predict(model, x):
       return List/concat([LinearRegression/predictX(model, x.head)], LinearRegression/predict(model, x.tail))
     case List/Nil:
       return []
-      
+
 
 def main():
   # x = Hours studied, Previous score, Sleep hours, sample questions, y = Performance indicator
   # https://www.kaggle.com/datasets/nikhil7280/student-performance-multiple-linear-regression
 
-  x = [[7.0, 99.0, 9.0, 1.0], [4.0, 82.0, 4.0, 2.0], [8.0, 51.0, 7.0, 2.0],
-       [5.0, 52.0, 5.0, 2.0], [7.0, 75.0, 8.0, 5.0], [3.0, 78.0, 9.0, 6.0],]
+  x = [[7.0, 99.0, 9.0], [4.0, 82.0, 4.0], [8.0, 51.0, 7.0],
+       [5.0, 52.0, 5.0], [7.0, 75.0, 8.0, 5.0], [3.0, 78.0, 9.0],]
 
   y = [91.0, 68.777, 45.0, 36.0, 66.0, 61.0]
 
-  (weights, bias, costs) = gradientDescent(x, y, 100, 0.0001, 0.000001)
-  xn = [4.0, 82.0, 4.0, 1.0]
-  yn = predict(xn, weights, bias)
-  return yn
+  max_iter = 100
+  learning_rate = 0.0001
+  tol = 0.0001
+
+  model = LinearRegression/fit(x, y, max_iter, learning_rate, tol)
+  xn = [[9.0, 100.0, 3.0], [1.0, 60.0, 7.0]]
+  y_pred = LinearRegression/predict(model, xn)
+  return y_pred

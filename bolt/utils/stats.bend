@@ -1,18 +1,19 @@
 from ./math import sum
 from ./types/List import (List/index)
 from ./helper import sort
+from ./math import (abs)
 
-def distance/aux(x, y, l, i):
+def distance/aux(x, y, p, l, i):
   if i < l:
-    return ((List/index(x, i) - List/index(y, i)) ** 2.0) + distance/aux(x, y, l, i + 1)
+    return (abs(List/index(x, i) - List/index(y, i)) ** p) + distance/aux(x, y, p, l, i + 1)
   else:
     return 0.0
 
 
-def distance(x, y):
+def distance(x, y, p):
   (l, x) = List/length(x)
-  k = distance/aux(x, y, l, 0)
-  return k ** 0.5
+  k = distance/aux(x, y, p, l, 0)
+  return k ** (1.0 / p)
 
 
 def mode/aux(x, count, previous, maxCount, currentMax):
