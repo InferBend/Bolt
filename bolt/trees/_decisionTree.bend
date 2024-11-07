@@ -2,14 +2,13 @@
 # Author: Nihal Srivastava, Jun 2024
 ##############################
 
-# List imports
-
 from ../utils/types/List import (List/index, List/append, List/contains)
-from ./utils/types/Set import (Set/add)
+from ../utils/types/Set import (Set/add)
 from ../utils/helper import sort
 from ../utils/math import (sum, log)
-from ./utils/stats import (mode)
-from ./utils/random import *
+from ../utils/stats import (mode)
+from ../utils/random import *
+
 
 def List/lengthInt(x):
   match x:
@@ -168,9 +167,7 @@ def isLeafNode(x):
       return 1
 
 
-def DecisionTree/fit(X, y):
-  max_depth = 100
-  min_samples_split = 2
+def DecisionTree/fit(X, y, max_depth, min_samples_split):
   match X:
     case List/Cons:
       (n, XHead) = List/length(X.head)
@@ -178,7 +175,7 @@ def DecisionTree/fit(X, y):
     case List/Nil:
       (n_feats, XHead) = (0, [])
   
-  tree = DecisionTree/growTree(X, y, 0, max_depth, min_samples_split, n_feats)
+  tree = DecisionTree/growTree(X, y, 0, max_depth, min_samples_split, n_feats, 32.0)
   return tree
 
 
@@ -215,7 +212,7 @@ def DecisionTree/mostCommonLabel(y):
   return most_common_label
 
 
-def DecisionTree/growTree(X, y, depth, max_depth, min_samples_split, n_feats):
+def DecisionTree/growTree(X, y, depth, max_depth, min_samples_split, n_feats, seed):
   n_samples = List/lengthInt(X)
   n_features = 0
   match X:
@@ -232,7 +229,7 @@ def DecisionTree/growTree(X, y, depth, max_depth, min_samples_split, n_feats):
     return DecisionTree/Leaf(leaf_value)
   else:
       # feat_idxs = choice(n_features, n_feats)
-    feat_idxs = List/shuffle(List/createRange(0, n_features, []), 43.0)
+    (feat_idxs, seed) = List/shuffle(List/createRange(0, n_features, []), seed)
     feat_idxs = List/getTopK(feat_idxs, n_feats, [])
 
     (best_feat, best_thresh) = bestCriteria(X, y, feat_idxs)
@@ -240,10 +237,10 @@ def DecisionTree/growTree(X, y, depth, max_depth, min_samples_split, n_feats):
     (left_idxs, right_idxs) = split(List/getColumn(X, best_feat), best_thresh)
 
     left = DecisionTree/growTree(List/bulkIndex(X, left_idxs), List/bulkIndex(
-        y, left_idxs), depth + 1, max_depth, min_samples_split, n_feats)
+        y, left_idxs), depth + 1, max_depth, min_samples_split, n_feats, seed)
 
     right = DecisionTree/growTree(List/bulkIndex(X, right_idxs), List/bulkIndex(
-        y, right_idxs), depth + 1, max_depth, min_samples_split, n_feats)
+        y, right_idxs), depth + 1, max_depth, min_samples_split, n_feats, seed)
 
     return DecisionTree/Node(best_feat, best_thresh, left, right)
 
@@ -323,12 +320,79 @@ def DecisionTree/predict(model, x):
       return []   
 
 def main():
-  X = [[5.0, 3.0, 4.0], [3.0, 2.0, 2.0], [1.5, 9.0, 7.0], [7.0, 2.0, 3.0], [
-      1.0, 12.0, 4.0], [2.0, 5.0, 3.0], [3.0, 6.0, 2.0], [2.0, 6.0, 2.5], [1.9, 5.8, 5.9]]
-  y = [0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 2.0, 2.0]
-  model = DecisionTree/fit(X, y)
+  X = [
+    [5.1, 3.5, 1.4, 0.2],
+    [4.9, 3.0, 1.4, 0.2],
+    [4.7, 3.2, 1.3, 0.2],
+    [5.0, 3.6, 1.4, 0.2],
+    [5.4, 3.9, 1.7, 0.4],
+    [6.1, 2.8, 4.0, 1.3],
+    [5.6, 2.9, 3.6, 1.3],
+    [5.5, 2.6, 4.4, 1.2],
+    [5.4, 3.7, 1.5, 0.2],
+    [5.0, 3.4, 1.5, 0.2],
+    [6.7, 3.1, 4.4, 1.4],
+    [5.6, 3.0, 4.1, 1.3],
+    [5.5, 2.4, 3.7, 1.0],
+    [6.0, 2.9, 4.5, 1.5],
+    [5.4, 3.4, 1.7, 0.2],
+    [6.3, 2.5, 4.9, 1.5],
+    [5.8, 2.7, 4.1, 1.0],
+    [5.0, 3.0, 1.6, 0.2],
+    [5.9, 3.0, 5.1, 1.8],
+    [6.1, 2.6, 5.6, 1.4],
+    [5.8, 2.7, 5.1, 1.9],
+    [7.1, 3.0, 5.9, 2.1],
+    [6.3, 2.9, 5.6, 1.8],
+    [6.5, 3.0, 5.8, 2.2],
+    [5.6, 2.5, 3.9, 1.1],
+    [6.1, 3.0, 4.9, 1.8],
+    [6.3, 2.8, 5.1, 1.5],
+    [7.6, 3.0, 6.6, 2.1],
+    [4.9, 2.5, 4.5, 1.7],
+    [5.5, 2.4, 3.8, 1.1],
+    [5.0, 3.5, 1.3, 0.3],
+    [6.7, 3.1, 5.6, 2.4],
+    [5.9, 3.2, 4.8, 1.8],
+    [5.6, 3.0, 4.5, 1.5],
+    [6.7, 2.5, 5.8, 1.8],
+    [5.5, 2.3, 4.0, 1.3],
+    [6.2, 2.2, 4.5, 1.5],
+    [6.3, 2.5, 4.9, 1.5],
+    [5.0, 3.4, 1.5, 0.2],
+    [5.1, 3.5, 1.4, 0.3],
+]
 
-  x = [[2.0, 7.0, 5.4], [5.0, 3.0, 4.0], [1.5, 10.0, 3.0]]
-  y_pred = DecisionTree/predict(model, x)
+  y = [
+    0.0, 0.0, 0.0, 0.0, 0.0, 
+    1.0, 1.0, 1.0, 0.0, 0.0, 
+    1.0, 1.0, 1.0, 1.0, 0.0, 
+    1.0, 1.0, 0.0, 2.0, 2.0, 
+    2.0, 2.0, 2.0, 2.0, 1.0, 
+    2.0, 2.0, 2.0, 1.0, 1.0, 
+    0.0, 2.0, 1.0, 1.0, 2.0, 
+    1.0, 1.0, 1.0, 0.0, 0.0, 
+    
+]
+
+  max_depth = 4
+  min_samples_split = 4
+
+  model = DecisionTree/fit(X, y, max_depth, min_samples_split)
+
+  x_test = [[6.1, 2.8, 4.7, 1.2],
+            [6.3, 3.3, 6.0, 2.5],
+            [5.6, 2.9, 3.6, 1.3],
+            [6.7, 3.0, 5.0, 1.7],
+            [5.0, 3.3, 1.4, 0.2],
+            [5.9, 3.0, 4.2, 1.5],
+            [10.3, 0.8, 3.1, 2.5],
+            [6.5, 3.2, 5.1, 2.0],
+            [5.5, 3.5, 1.3, 0.2],
+            [6.7, 2.5, 5.8, 1.8]]
+
+  y_actual = [1.0, 2.0, 1.0, 2.0, 0.0, 1.0, 2.0, 2.0, 0.0, 2.0]
+
+  y_pred = DecisionTree/predict(model, x_test)
 
   return y_pred

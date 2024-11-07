@@ -81,8 +81,8 @@ R^2 = 1 - \frac{\text{Sum of Squared Errors (SSE)}}{\text{Total Sum of Squares (
 `$
 
 where:
-- **SSE** is the sum of squared errors, calculated as \(\sum (y_{\text{true}} - y_{\text{pred}})^2\).
-- **TSS** is the total sum of squares, calculated as \(\sum (y_{\text{true}} - \text{mean}(y_{\text{true}}))^2\).
+- **SSE** is the sum of squared errors, calculated as $`\sum (y_{\text{true}} - y_{\text{pred}})^2`$.
+- **TSS** is the total sum of squares, calculated as $`\sum (y_{\text{true}} - \text{mean}(y_{\text{true}}))^2`$.
 
 ### Example
 
