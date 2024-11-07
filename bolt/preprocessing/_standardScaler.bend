@@ -1,29 +1,30 @@
 from ../utils/math import sum
 from ../utils/types/List import List/append
+from ../utils/stats import mean
 
 object StandardScaler {std, mean_val}
 
 
-def deviation_sum(x, mean):
+def deviation_sum(x, meanX):
   match x:
     case List/Cons:
-      return ((x.head - mean)*(x.head - mean))+deviation_sum(x.tail, mean)
+      return ((x.head - meanX)**2.0)+deviation_sum(x.tail, meanX)
     case List/Nil:
       return 0.0
 
 
-def scaler(x, mean, stdev, out):
+def scaler(x, meanX, stdev, out):
   match x:
     case List/Cons:
-      return scaler(x.tail, mean, stdev, List/append(out, (x.head - mean) / stdev))
+      return scaler(x.tail, meanX, stdev, List/append(out, (x.head - meanX) / stdev))
     case List/Nil:
       return out
 
 
-def inverseScaler(x, mean, stdev, out):
+def inverseScaler(x, meanX, stdev, out):
   match x:
     case List/Cons:
-      return inverseScaler(x.tail, mean, stdev, List/append(out, ((x.head * stdev) + mean)))
+      return inverseScaler(x.tail, meanX, stdev, List/append(out, ((x.head * stdev) + meanX)))
     case List/Nil:
       return out
 
@@ -40,15 +41,11 @@ def standard_scaler(x):
   n = 0.0
   total = 0.0
   (n, x) = List/length(x)
-  total = sum(x)
-  mean = total / n
-  stdev = 0.0
-  stdev = deviation_sum(x, mean)
-  stdev = (stdev / (n - 1))**0.5
+  meanX = mean(x)
+  deviationSum = deviation_sum(x, meanX)
+  stdev = (deviationSum / (u24/to_f24(n) - 1))**0.5
 
-  return StandardScaler {std: stdev, mean_val: mean}
-
-# scaler(x,mean,stdev,[])
+  return StandardScaler {std: stdev, mean_val: meanX}
 
 
 def main():
@@ -59,4 +56,4 @@ def main():
   # 1 for standard scaling -1 for inverse
   res = transform(x, model, 1)
   out = transform(res, model, -1)
-  return model
+  return out
