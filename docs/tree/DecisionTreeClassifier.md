@@ -15,15 +15,15 @@ In decision trees, **entropy** quantifies the impurity in the data at each node.
 
 ### Entropy Formula
 
-For a set of classes $` C = \{c_1, c_2, \ldots, c_k\} `$, where $` p(c_i) `$ is the proportion of data points in class $` c_i `$ at a given node, the entropy $` H `$ at that node is defined as:
+For a set of classes $C = \{c_1, c_2, \ldots, c_k\}$, where $p(c_i)$ is the proportion of data points in class $c_i$ at a given node, the entropy $H$ at that node is defined as:
 
-$`
+$$
 H(C) = - \sum_{i=1}^{k} p(c_i) \cdot \log_2(p(c_i))
-`$
+$$
 
-where:
-- $` p(c_i) `$ is the probability of class $` c_i `$ within the node.
-- $` \log_2 `$ is the base-2 logarithm.
+where:  
+- $p(c_i)$ is the probability of class $c_i$ within the node.  
+- $\log_2$ is the base-2 logarithm.  
 
 A node with only one class will have an entropy of 0 (completely pure), while a node with an equal mix of classes will have the highest entropy.
 
@@ -31,15 +31,15 @@ A node with only one class will have an entropy of 0 (completely pure), while a 
 
 When a split is made based on a feature, **information gain** calculates the reduction in entropy. Higher information gain means the split yields a purer separation between classes. It’s given by:
 
-$`
+$$
 \text{Information Gain} = H(\text{parent}) - \left( \frac{n_{\text{left}}}{n} \cdot H(\text{left}) + \frac{n_{\text{right}}}{n} \cdot H(\text{right}) \right)
-`$
+$$
 
-where:
-- $` H(\text{parent}) `$ is the entropy of the parent node.
-- $` H(\text{left}) `$ and $` H(\text{right}) `$ are the entropies of the left and right child nodes.
-- $` n_{\text{left}} `$ and $` n_{\text{right}} `$ are the number of samples in the left and right child nodes.
-- $` n `$ is the total number of samples in the parent node.
+where:  
+- $H(\text{parent})$ is the entropy of the parent node.  
+- $H(\text{left})$ and $H(\text{right})$ are the entropies of the left and right child nodes.  
+- $n_{\text{left}}$ and $n_{\text{right}}$ are the number of samples in the left and right child nodes.  
+- $n `$ is the total number of samples in the parent node.  
 
 ---
 
@@ -141,9 +141,9 @@ print("Predicted Class Labels:", y_pred)
 
 Each decision node in the tree splits data based on a feature value:  
   
-$`
+$$
 \text{if } x_{\text{feature}} \leq \text{threshold, go to left child; else, go to right child.}
-`$
+$$
 
 Once a sample reaches a leaf node, the leaf node’s **value** is used as the predicted class for that sample.
 

@@ -11,9 +11,9 @@ The `accuracy_score` metric calculates the accuracy of a classification model by
 
 Accuracy is a simple but effective metric, especially for balanced datasets where classes are evenly represented. It’s calculated as:
 
-$`
+$$
 \text{Accuracy} = \frac{\text{Number of Correct Predictions}}{\text{Total Number of Predictions}}
-`$
+$$
 
 This function is ideal for quick model evaluation and gives an immediate sense of how well the model performs on a given dataset.
 

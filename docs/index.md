@@ -10,6 +10,8 @@ scikit-learn requires:
 - Bend (>= 0.2.37)  
 - HVM (>= 2.0.22)  
 
+Visit official bends repositor for instructions on how to install [bend](https://github.com/HigherOrderCO/Bend)
+
 ### User installation
 
 Since bend does not have a package manager yet, clone the repo and you can directly import from bolt directory.
