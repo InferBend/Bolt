@@ -1,4 +1,4 @@
-from ./preprocessing/_standardScaler import (StandardScaler, standard_scaler, transform)
+from ./preprocessing/_standardScaler import (StandardScaler, StandardScaler/fit, StandardScaler/transform)
 from ./utils/testing import assert_almost_equal
 from ./linear_model/_logisticRegression import (LogisticRegression/fit, LogisticRegression/predict)
 
@@ -12,9 +12,9 @@ def main():
       [27.0, 27.0, 1.0, 0.0], [36.0, 50.0, 0.0, 2.0]]
   y = [0.0, 1.0, 0.0, 1.0, 1.0, 1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0]
 
-  model = standard_scaler(x)
+  model = StandardScaler/fit(x)
   open StandardScaler: model
-  X = transform(x, model, 1)
+  X = StandardScaler/transform(model, x)
 
   max_iter = 500
   learning_rate = 0.0002
@@ -25,7 +25,7 @@ def main():
   x_test = [[26.0, 24.0, 0.0, 1.0], [27.0, 27.0, 1.0, 0.0],
             [39.0, 53.0, 1.0, 3.0]]
 
-  X_test = transform(x_test, model, 1)
+  X_test = StandardScaler/transform(model, x_test)
 
   y_pred = LogisticRegression/predict(logreg_model, X_test)
 
