@@ -101,7 +101,7 @@ def generate_inverse_map(uniqueValues, idx, l, class_map, inverse_map):
   else:
     return inverse_map
 
-def LabelEncoder/fit(y):
+def LabelEncoder/fit(y: List(String)):
   encoded = find_unique(y, [])
   (l, encoded) = List/length(encoded)
   class_map = generate_class_map(encoded, l, [], 0, {})
