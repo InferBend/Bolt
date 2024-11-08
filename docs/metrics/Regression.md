@@ -18,9 +18,9 @@ The `meanSquaredError` (MSE) metric calculates the average squared difference be
 
 ### Formula
 
-$`
+$$
 \text{MSE} = \frac{1}{n} \sum_{i=1}^{n} (y_{\text{true},i} - y_{\text{pred},i})^2
-`$
+$$
 
 ### Example
 
@@ -47,9 +47,9 @@ The `meanAbsoluteError` (MAE) metric calculates the average absolute difference 
 
 ### Formula
 
-$`
+$$
 \text{MAE} = \frac{1}{n} \sum_{i=1}^{n} |y_{\text{true},i} - y_{\text{pred},i}|
-`$
+$$
 
 ### Example
 
@@ -76,13 +76,13 @@ The `r2_score` (R-squared) metric, also known as the coefficient of determinatio
 
 ### Formula
 
-$`
+$$
 R^2 = 1 - \frac{\text{Sum of Squared Errors (SSE)}}{\text{Total Sum of Squares (TSS)}}
-`$
+$$
 
-where:
-- **SSE** is the sum of squared errors, calculated as $`\sum (y_{\text{true}} - y_{\text{pred}})^2`$.
-- **TSS** is the total sum of squares, calculated as $`\sum (y_{\text{true}} - \text{mean}(y_{\text{true}}))^2`$.
+where:  
+- **SSE** is the sum of squared errors, calculated as $\sum (y_{\text{true}} - y_{\text{pred}})^2$.  
+- **TSS** is the total sum of squares, calculated as $\sum (y_{\text{true}} - \text{mean}(y_{\text{true}}))^2$.  
 
 ### Example
 
@@ -108,9 +108,9 @@ The `totalSumOfSquares` (TSS) metric provides a measure of the total variance of
 
 ### Formula
 
-$`
+$$
 \text{TSS} = \sum_{i=1}^{n} (y_{\text{true},i} - \text{mean}(y_{\text{true}}))^2
-`$
+$$
 
 ### Example
 

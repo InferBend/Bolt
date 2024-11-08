@@ -10,22 +10,22 @@ Here’s the mathematical formula for standard scaling, which can be added to th
 
 ## Standard Scaling Formula
 
-The `StandardScaler` transforms each feature $` x_i `$ in the dataset to have a mean of 0 and a standard deviation of 1. The scaling formula is given by:
+The `StandardScaler` transforms each feature $x_i$ in the dataset to have a mean of 0 and a standard deviation of 1. The scaling formula is given by:
 
-$`
+$$
 x_{\text{scaled}} = \frac{x - \mu}{\sigma}
-`$
+$$
 
 where:
-- $` x `$ is the original feature value.
-- $` \mu `$ is the mean of the feature across all samples.
-- $` \sigma `$ is the standard deviation of the feature.
+- $x$ is the original feature value.
+- $\mu$ is the mean of the feature across all samples.
+- $\sigma$ is the standard deviation of the feature.
 
 For inverse scaling, we use:
 
-$`
+$$
 x_{\text{original}} = x_{\text{scaled}} \times \sigma + \mu
-`$
+$$
 
 This formula allows us to revert the scaled data back to its original values.
 
