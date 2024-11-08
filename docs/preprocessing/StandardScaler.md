@@ -35,21 +35,25 @@ This should give users a clearer understanding of the standard scaling and inver
 
 ## Parameters
 
-### `standard_scaler(x: List[List[f24]])`
+### `StandardScaler/fit(x: List[List[f24]])`
 
 - **x**: Input data, a list of lists where each sublist represents a feature vector, type `f24`.
 
 **Returns**: A fitted `StandardScaler` model, containing computed statistics (mean and standard deviation) for each feature.
 
-### `transform(x: List[List[f24]], model: StandardScaler, direction: i24)`
+### `StandardScaler/transform(model: StandardScaler, x: List[List[f24]])`
 
 - **x**: Data to transform, a list of lists where each sublist represents a feature vector, type `f24`.
 - **model**: A fitted `StandardScaler` instance.
-- **direction**: An integer (1 or -1) specifying the direction of scaling:
-  - **1** for standard scaling, i.e., to apply the transformation based on the computed mean and standard deviation.
-  - **-1** for inverse scaling, i.e., to revert the scaled data back to its original values.
 
-**Returns**: Scaled or inversely scaled data, a list of lists in the same shape as `x`.
+**Returns**: Scaled data, a list of lists in the same shape as `x`.
+
+### `StandardScaler/inverse_transform(model: StandardScaler, x: List[List[f24]])`
+
+- **x**: Data to transform, a list of lists where each sublist represents a encoded vector, type `f24`.
+- **model**: A fitted `StandardScaler` instance.
+
+**Returns**: Inverserly scaled data, a list of lists in the same shape as `x`.
 
 ---
 
@@ -68,6 +72,7 @@ After the `StandardScaler` model is fitted, you can access these attributes to u
 model = standard_scaler(x)
 
 # Accessing model mean and standard deviation
+open StandardScaler: model
 with IO:
   IO/print("Mean:", model.featureMean)
   IO/print("Standard Deviation:", model.stddev)
@@ -87,27 +92,21 @@ x = [
 ]
 
 # Fit the Standard Scaler model to data
-model = standard_scaler(x)
+model = StandardScaler/fit(x)
+open StandardScaler: model
 
 # Transform the data using standard scaling
-res = transform(x, model, 1)
+res = StandardScaler/transform(model, x)
 print("Standard Scaled Data:", res)
 
 # Inverse transform the scaled data to return to original scale
-out = transform(res, model, -1)
+out = StandardScaler/inverse_transform(model, res)
 print("Inversely Scaled Data (Original Data):", out)
 
 # Outputs:
 # Standard Scaled Data: [[-1.0, -1.0], [1.0, 1.0]]
 # Inversely Scaled Data (Original Data): [[1.0, 2.0], [10.0, 5.0]]
 ```
-
----
-
-## Explanation of Transformation Parameters
-
-- **direction = 1**: Standard scaling applies the transformation by subtracting the mean and dividing by the standard deviation of each feature.
-- **direction = -1**: Inverse scaling reverses the transformation by multiplying by the standard deviation and adding the mean back, effectively reconstructing the original data.
 
 ---
 

@@ -1,14 +1,13 @@
-from ./preprocessing/_standardScaler import (StandardScaler, standard_scaler, transform)
+from ./preprocessing/_standardScaler import (StandardScaler, StandardScaler/fit, StandardScaler/transform, StandardScaler/inverse_transform)
 from ./utils/testing import assert_multi_array
 
 def main():
   x = [[1.0, 2.0], [10.0, 5.0]]
-  model = standard_scaler(x)
+  model = StandardScaler/fit(x)
   open StandardScaler: model
 
-  # 1 for standard scaling -1 for inverse
-  res = transform(x, model, 1)
-  out = transform(res, model, -1)
+  res = StandardScaler/transform(model, x)
+  out = StandardScaler/inverse_transform(model, res)
 
   if assert_multi_array(res, [[-1.0, -1.0], [1.0, 1.0]]) & assert_multi_array(out, x):
     return "PASS"

@@ -31,13 +31,13 @@ def inverseScaler(x, meanX, stdev, out):
     case List/Nil:
       return out
 
-
-def transform(x, model, direction):
+def StandardScaler/transform(model, x):
   open StandardScaler: model
-  if direction == 1:
-    return scaler(x, model.featureMean, model.stddev, [])
-  else:
-    return inverseScaler(x, model.featureMean, model.stddev, [])
+  return scaler(x, model.featureMean, model.stddev, [])
+
+def StandardScaler/inverse_transform(model, x):
+  open StandardScaler: model
+  return inverseScaler(x, model.featureMean, model.stddev, [])
 
 
 def sumOverFeatures/aux(x: List(List(f24)), featureSum: List(f24)):
@@ -76,7 +76,7 @@ def meanOverFeatures(x: List(List(f24))):
   return featureMean
 
 
-def standard_scaler(x):
+def StandardScaler/fit(x):
   n = 0.0
   total = 0.0
 
@@ -98,10 +98,9 @@ def standard_scaler(x):
 
 def main():
   x = [[1.0, 2.0], [10.0, 5.0]]
-  model = standard_scaler(x)
+  model = StandardScaler/fit(x)
   open StandardScaler: model
 
-  # 1 for standard scaling -1 for inverse
-  res = transform(x, model, 1)
-  out = transform(res, model, -1)
+  res = StandardScaler/transform(model, x)
+  out = StandardScaler/inverse_transform(model, res)
   return out
