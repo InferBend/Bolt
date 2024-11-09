@@ -10,7 +10,7 @@ Bolt is the fastest man alive and a cool cartoon dog, but here we bring to you a
 ## Installation
 
 ### Dependencies
-scikit-learn requires:
+Bolt requires:
 - Bend (>= 0.2.37)
 - HVM (>= 2.0.22)
 
