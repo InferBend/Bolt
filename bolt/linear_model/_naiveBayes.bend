@@ -2,7 +2,7 @@
 from ../preprocessing/_oneHotEncoding import (onehotencoder)
 from ../utils/vector import (transpose)
 
-from ../utils/types/List import(List/reverse,List/contains,List/index,List/append)
+from ../utils/types/List import(List/reverse,List/contains,List/index,List/append, List/appendFront)
 
 ######################################################################################################
 
@@ -55,7 +55,7 @@ def compute_probabilities(elements, lst, total,s):
   match elements:
     case List/Cons:
       count = count_occurrences(lst, elements.head)
-      prob = count / to_f24(total)
+      prob = count / u24/to_f24(total)
       s=List/append(s,prob)
       return compute_probabilities(elements.tail, lst, total,s)
     case List/Nil:
@@ -322,7 +322,19 @@ def multiply_list(l,factor,res):
       return multiply_list(l.tail,factor,res)
     case List/Nil:
       return res
-      
+
+  
+def calculate_final_probabilities(mp, prob_list, index_x, index_y, num_target):
+  if index_y < num_target:
+    prob_y = prob_list[index_y]
+    prob_x = mp[index_x]
+    prob_xy = multiply_list(prob_x, prob_y,[])
+
+    return List/appendFront(calculate_final_probabilities(mp, prob_list, index_x+1, index_y+1, num_target), prob_xy)
+  else:
+    return []
+
+
 
 def calculate_final_prob(mp,prob_list,l,px,py,r,ly):
   prob_yes=prob_list[1]
@@ -331,7 +343,7 @@ def calculate_final_prob(mp,prob_list,l,px,py,r,ly):
   res2=mp[0]
   prob_yes_array=multiply_list(res1,prob_yes,[])
   prob_no_array=multiply_list(res2,prob_no,[])
-  prob_no_array_rev=List/reverse(prob_no_array) #Have to reverse it for matching suny column
+  prob_no_array_rev=List/reverse(prob_no_array) #Have to reverse it for matching sunny column
   return [prob_yes_array,prob_no_array_rev]
 
       
@@ -341,12 +353,12 @@ def naive_bayes(x,y):
   (lx,unique_x)=List/length(unique_x)
   (ly,unique_y)=List/length(unique_y)
   k=helper(x,y,unique_x,unique_y,[])
-  k_transpose= transpose(k)
-  k1=genrate_prob_matrix(k_transpose,x,to_f24(lx),unique_x,[])
+  k_transpose= transpose(k,[])
+  k1=genrate_prob_matrix(k_transpose,x,u24/to_f24(lx),unique_x,[])
   mp=probability_map(unique_x,k1,{}) #mp[0]-> no mp[1]->yes
   prob_list=probability(y) #prob_list[0]->no prob_list[1]->yes
-  final_list=calculate_final_prob(mp,prob_list,[],1,1,0,to_f24(ly)) #(px,py,start from idx,length of y)
-
+  
+  final_list = calculate_final_probabilities(mp, prob_list, 0, 0, ly)
   return final_list
 
   

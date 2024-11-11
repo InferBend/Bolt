@@ -1,6 +1,16 @@
 from linear_model/_naiveBayes import(naive_bayes)
 from preprocessing/_oneHotEncoding import(onehotencoder)
+from utils/types/List import(List/append)
+from utils/vector import(transpose)
 
+def helpr(x,x_train):
+  match x:
+    case List/Cons:
+      x1=onehotencoder(x.head)
+      x_train=List/append(x_train,x1)
+      return helpr(x.tail,x_train)
+    case List/Nil:
+      return x_train
 
 def main():
   # X = [[5.0, 3.0, 4.0], [3.0, 2.0, 2.0], [1.5, 9.0, 7.0], [7.0, 2.0, 3.0], [
@@ -32,8 +42,9 @@ def main():
 
   # y_pred= LogisticRegression/predict(lr_model,x_test)
   # return y_pred
-  y=["no", "no", "yes", "yes", "yes", "no", "yes", "no", "yes", "yes", "yes", "yes", "yes", "no"]
+  y=["no", "no", "yes", "maybe", "yes", "maybe", "yes", "no", "maybe", "yes", "yes", "yes", "yes", "maybe"]
   x=["sunny", "sunny", "overcast", "rainy", "rainy", "rainy", "overcast", "sunny", "sunny", "rainy", "sunny", "overcast", "overcast", "rainy"]
+    
   x=onehotencoder(x)
   y=onehotencoder(y)
   # x=[0, 0, 1, 2, 2, 2, 1, 0, 0, 2, 0, 1, 1, 2]
