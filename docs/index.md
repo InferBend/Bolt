@@ -1,7 +1,7 @@
 # Bolt
 ## Bendable Optimization and Learning Toolkit
 
-Bolt is the fastest man alive and a cool cartoon dog, but here we bring to you a toolkit to easily run machine learning algorithms. Bolt in a Bend module for machine learning and is distributed under the 3-Clause BSD license.
+Bolt is the fastest man alive and a cool cartoon dog, but here we bring to you a toolkit to easily run machine learning algorithms. Bolt is a Bend module for machine learning and is distributed under the 3-Clause BSD license.
 
 ## Installation
 
