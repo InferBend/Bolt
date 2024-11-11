@@ -22,7 +22,7 @@ def randomInt(lower, upper, seed):
 
 def List/shuffle/aux(x, i, seed):
   if i < 1:
-    return x
+    return (x, seed)
   else:
     (l, x) = List/length(x)
     (randomIndex, seed) = randomInt(1.0, l - 1, seed)

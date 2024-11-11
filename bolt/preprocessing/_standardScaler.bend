@@ -1,62 +1,106 @@
-from ../utils/_math import sum
-from ../utils/types/List import List/append
+from ../utils/math import sum
+from ../utils/types/List import (List/append, List/appendFront)
+from ../utils/stats import mean
+from ../utils/vector import (subtract, multiply, multiplyScalar, initializeArray, vectorSum, vectorPower)
 
-object StandardScaler {std, mean_val}
+object StandardScaler {stddev, featureMean}
 
-
-def deviation_sum(x, mean):
+def deviationSum(x, meanX):
   match x:
     case List/Cons:
-      return ((x.head - mean)*(x.head - mean))+deviation_sum(x.tail, mean)
+      diff = subtract(x.head, meanX, [])
+      squared_diff = multiply(diff, diff, [])
+      return vectorSum(squared_diff, deviationSum(x.tail, meanX))
     case List/Nil:
-      return 0.0
+      (n, meanX) = List/length(meanX)
+      return initializeArray(u24/to_f24(n), 0.0, [])
 
 
-def scaler(x, mean, stdev, out):
+def scaler(x, meanX, stdev, out):
   match x:
     case List/Cons:
-      return scaler(x.tail, mean, stdev, List/append(out, (x.head - mean) / stdev))
-    case List/Nil:
-      return out
-
-
-def inverseScaler(x, mean, stdev, out):
-  match x:
-    case List/Cons:
-      return inverseScaler(x.tail, mean, stdev, List/append(out, ((x.head * stdev) + mean)))
+      return scaler(x.tail, meanX, stdev, List/append(out, multiply(subtract(x.head, meanX, []), vectorPower(stdev, -1.0), [])))
     case List/Nil:
       return out
 
 
-def transform(x, model, direction):
+def inverseScaler(x, meanX, stdev, out):
+  match x:
+    case List/Cons:
+      return inverseScaler(x.tail, meanX, stdev, List/append(out, vectorSum(multiply(x.head, stdev, []), meanX)))
+    case List/Nil:
+      return out
+
+def StandardScaler/transform(model, x):
   open StandardScaler: model
-  if direction == 1:
-    return scaler(x, model.mean_val, model.std, [])
-  else:
-    return inverseScaler(x, model.mean_val, model.std, [])
+  return scaler(x, model.featureMean, model.stddev, [])
+
+def StandardScaler/inverse_transform(model, x):
+  open StandardScaler: model
+  return inverseScaler(x, model.featureMean, model.stddev, [])
 
 
-def standard_scaler(x):
+def sumOverFeatures/aux(x: List(List(f24)), featureSum: List(f24)):
+  match x:
+    case List/Cons:
+      featureSum = vectorSum(x.head, featureSum)
+      return sumOverFeatures/aux(x.tail, featureSum)
+    case List/Nil:
+      return featureSum
+
+
+def sumOverFeatures(x: List(List(f24))):
+  match x:
+    case List/Cons:
+      (n_features, xHead) = List/length(x.head)
+    case List/Nil:
+      (n_features, xHead) = (0, [])
+
+  n_features = u24/to_f24(n_features)
+  featureSumm = initializeArray(n_features, 0.0, [])
+  return sumOverFeatures/aux(x, featureSumm)
+
+
+def meanOverFeatures(x: List(List(f24))):
+  match x:
+    case List/Cons:
+      (n_features, xHead) = List/length(x.head)
+    case List/Nil:
+      (n_features, xHead) = (0, [])
+
+  n_features = u24/to_f24(n_features)
+
+  summ = sumOverFeatures(x)
+  featureMean = multiplyScalar(summ, 1.0/n_features, [])
+
+  return featureMean
+
+
+def StandardScaler/fit(x):
   n = 0.0
   total = 0.0
+
+  match x:
+    case List/Cons:
+      (n_features, xHead) = List/length(x.head)
+    case List/Nil:
+      (n_features, xHead) = (0, [])
+
   (n, x) = List/length(x)
-  total = sum(x)
-  mean = total / n
-  stdev = 0.0
-  stdev = deviation_sum(x, mean)
-  stdev = (stdev / (n - 1))**0.5
 
-  return StandardScaler {std: stdev, mean_val: mean}
+  featureMean = meanOverFeatures(x)
+  deviation = deviationSum(x, featureMean)
+  stddev = multiplyScalar(deviation, 1.0 / u24/to_f24(n_features), [])
+  stddev = vectorPower(stddev, 0.5)
 
-# scaler(x,mean,stdev,[])
+  return StandardScaler {stddev: stddev, featureMean: featureMean}
 
 
 def main():
-  x = [10.0, 20.0, 30.0, 40.0]
-  model = standard_scaler(x)
+  x = [[1.0, 2.0], [10.0, 5.0]]
+  model = StandardScaler/fit(x)
   open StandardScaler: model
 
-  # 1 for standard scaling -1 for inverse
-  res = transform(x, model, 1)
-  out = transform(res, model, -1)
-  return model
+  res = StandardScaler/transform(model, x)
+  out = StandardScaler/inverse_transform(model, res)
+  return out

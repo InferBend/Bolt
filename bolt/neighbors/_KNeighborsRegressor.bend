@@ -5,7 +5,6 @@
 from ../utils/types/List import *
 from ../utils/stats import (distance, mean)
 
-
 def sort(xs):
   match xs:
     case List/Nil:
@@ -30,24 +29,14 @@ def swap_gt(v, x, xs):
   else:
     return List/Cons(x, insert(v, xs))
 
-
-def distanceBetweenPoints(points, x):
-  match points:
-    case List/Cons:
-      return distance(points.head, x) + distanceBetweenPoints(points.tail, x)
-    case List/Nil:
-      return 0.0
-
-
-def knn/getDistances(X, p, distances):
+def knn/getDistances(X, xn, p, distances):
   match X:
     case List/Cons:
-      d = distance(X.head, p)
+      d = distance(X.head, xn, p)
       distances = List/append(distances, d)
-      return knn/getDistances(X.tail, p, distances)
+      return knn/getDistances(X.tail, xn, p, distances)
     case List/Nil:
       return distances
-
 
 def List/indexedArray(a, i, c):
   match a:
@@ -56,7 +45,6 @@ def List/indexedArray(a, i, c):
       return List/indexedArray(a.tail, i + 1, c)
     case List/Nil:
       return c
-
 
 def knn/aux(nearestPoints, y, k, nearestYs):
   if k == 0:
@@ -80,14 +68,42 @@ def Knn/fit_predict(X, y, p, k):
 
   return mean(nearestYs)
 
+type KNeighborsRegressor:
+  Model {X, y, n_neighbors, p}
+
+
+def Knn/fit(X: List(List(f24)), y: List(f24), n_neighbors: u24, p: f24):
+  # n_neighbors: Number of neighbors to use by default for kneighbors queries.
+  # p: Power parameter for the Minkowski metric
+  
+  return KNeighborsRegressor/Model(X, y, n_neighbors, p)
+
+def Knn/predictX(model, x_test):
+  match model:
+    case KNeighborsRegressor/Model:
+      distances = knn/getDistances(model.X, x_test, model.p, [])
+      distances = List/indexedArray(distances, 0, [])
+      nearestPoints = sort(distances)
+      nearestYs = knn/aux(nearestPoints, model.y, model.n_neighbors, [])
+
+      return mean(nearestYs)
+
+def Knn/predict(model, x):
+  match x:
+    case List/Cons:
+      return List/concat([Knn/predictX(model, x.head)], Knn/predict(model, x.tail))
+    case List/Nil:
+      return []    
 
 def main():
   X = [[5.0, 3.0, 4.0], [3.0, 2.0, 2.0], [1.5, 9.0, 7.0], [7.0, 2.0, 3.0], [
       1.0, 12.0, 4.0], [2.0, 5.0, 3.0], [3.0, 6.0, 2.0], [2.0, 6.0, 2.5], [1.9, 5.8, 5.9]]
   y = [1.2, 3.2, 5.1, 6.7, 10.2, 6.7, 4.5, 2.3, 5.7]
-  p = [2.0, 7.0, 5.4]
-  k = 3
+  x_test = [[2.0, 7.0, 5.4], [3.0, 0.0, 3.0]]
+  k = 5
+  p = 2.0
 
-  nearest = Knn/fit_predict(X, y, p, k)
+  model = Knn/fit(X, y, k, p)
+  res = Knn/predict(model, x_test)
 
-  return nearest
+  return res

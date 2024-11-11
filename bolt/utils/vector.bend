@@ -1,5 +1,10 @@
-from ./types/List import List/append
+from ./types/List import (List/append, List/appendFront)
 
+def initializeArray(size, value, arr):
+  if size == 0.0:
+    return arr
+  else:
+    return initializeArray(size - 1.0, value, List/append(arr, value))
 
 def subtract(x, y, z):
   match x:
@@ -37,7 +42,6 @@ def multiplyScalar(x, val, z):
     case List/Nil:
       return z
 
-
 def transpose(matrix, res):
   match matrix:
     case List/Cons:
@@ -73,3 +77,22 @@ def get_element(row, col_index, current_index):
         return get_element(row.tail, col_index, current_index + 1)  
     case List/Nil:
       return 0  
+
+def vectorSum(x, y):
+  match x:
+    case List/Cons:
+      match y:
+        case List/Cons:
+          d = (x.head + y.head)
+          return List/appendFront(vectorSum(x.tail, y.tail), d)
+        case List/Nil:
+          return []
+    case List/Nil:
+      return []
+
+def vectorPower(x, val):
+  match x:
+    case List/Cons:
+      return List/appendFront(vectorPower(x.tail, val), x.head ** val)
+    case List/Nil:
+      return []

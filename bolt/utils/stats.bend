@@ -1,22 +1,19 @@
 from ./math import sum
 from ./types/List import (List/index)
+from ./helper import sort
+from ./math import (abs)
+
+def distance/aux(x, y, p, l, i):
+  if i < l:
+    return (abs(List/index(x, i) - List/index(y, i)) ** p) + distance/aux(x, y, p, l, i + 1)
+  else:
+    return 0.0
 
 
-def distance/aux(x, y, i):
-  match x:
-    case List/Cons:
-      (l, x) = List/length(x)
-      if i < l:
-        return ((List/index(x, i) - List/index(y, i)) * (List/index(x, i) - List/index(y, i))) + distance/aux(x, y, i + 1)
-      else:
-        return 0.0
-    case List/Nil:
-      return 0.0
-
-
-def distance(x, y):
-  x = distance/aux(x, y, 0)
-  return x ** 0.5
+def distance(x, y, p):
+  (l, x) = List/length(x)
+  k = distance/aux(x, y, p, l, 0)
+  return k ** (1.0 / p)
 
 
 def mode/aux(x, count, previous, maxCount, currentMax):
@@ -37,12 +34,14 @@ def mode/aux(x, count, previous, maxCount, currentMax):
 
 
 def mode(x):
+  # TODO: Think of an alternative to -1.0 as previous number
+  x = sort(x)
   return mode/aux(x, 0.0, -1.0, 0.0, -1.0)
 
 
 def mean(x):
   (l, x) = List/length(x)
-  return sum(x) / to_f24(l)
+  return sum(x) / u24/to_f24(l)
 
 
 def main():
