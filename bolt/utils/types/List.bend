@@ -100,3 +100,16 @@ def List/contains(lst, elem):
         return List/contains(lst.tail, elem)
     case List/Nil:
       return 0
+
+
+def List/reverse/aux(list,reverse_list):
+  match list:
+    case List/Cons:
+      reverse_list=List/appendFront(reverse_list,list.head)
+      return List/reverse/aux(list.tail,reverse_list)
+    case List/Nil:
+      return reverse_list
+
+
+def List/reverse(list):
+  return List/reverse/aux(list,[])
