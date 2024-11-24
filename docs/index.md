@@ -1,3 +1,6 @@
+
+<img src="./logos/logo blue trasp.svg" width="350px">
+
 # Bolt
 ## Bendable Optimization and Learning Toolkit
 
