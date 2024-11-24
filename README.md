@@ -5,6 +5,8 @@
 ![repo size](https://img.shields.io/github/repo-size/InferBend/Bolt)
 ![Commits since last release](https://img.shields.io/github/commits-since/InferBend/Bolt/latest?include_prereleases&color=red)
 
+<img src="./docs/logos/logo blue trasp.svg" width="350px">
+
 # BOLT: Bendable Optimization and Learning Toolkit
 
 Bolt is the fastest man alive and a cool cartoon dog, but here we bring to you a toolkit to easily run machine learning algorithms. Bolt is a Bend module for machine learning and is distributed under the 3-Clause BSD license.
