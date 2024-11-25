@@ -15,7 +15,7 @@ Bolt is the fastest man alive and a cool cartoon dog, but here we bring to you a
 
 ### Dependencies
 Bolt requires:
-- Bend (>= 0.2.37)
+- [Bend (>= 0.2.37)](https://github.com/HigherOrderCO/Bend)
 - HVM (>= 2.0.22)
 
 ### User installation
